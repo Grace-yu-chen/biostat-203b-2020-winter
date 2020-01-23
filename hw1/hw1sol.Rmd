@@ -18,9 +18,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 4. After each homework due date, teaching assistant and instructor will check out your master branch for grading. Tag each of your homework submissions with tag names `hw1`, `hw2`, ... Tagging time will be used as your submission time. That means if you tag your `hw1` submission after deadline, penalty points will be deducted for late submission.
 
+**SOLUTION** 
+  The solution for question 1 is shown.
+
 ## Q2. Linux Shell Commands
 
 1. This exercise (and later in this course) uses the [MIMIC-III data](https://mimic.physionet.org), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Please follow the instructions at <https://mimic.physionet.org/gettingstarted/access/> to complete the CITI `Data or Specimens Only Research` course. Show the screenshot of your completion report. 
+**SOLUTION**
+  <p align="center">
+  <img src="./completionreport1.png">
+</p>
 
 2. The `/home/203bdata/mimic-iii/` folder on teaching server contains data sets from MIMIC-III. See <https://mimic.physionet.org/mimictables/admissions/> for details of each table.  
     ```{bash}
@@ -97,3 +104,4 @@ for both methods.
 | 400 | SampAvg  |       |       |          |
 | 500 | PrimeAvg |       |       |          |
 | 500 | SampAvg  |       |       |          |
+ 
