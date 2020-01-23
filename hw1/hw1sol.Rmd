@@ -24,6 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Q2. Linux Shell Commands
 
 1. This exercise (and later in this course) uses the [MIMIC-III data](https://mimic.physionet.org), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Please follow the instructions at <https://mimic.physionet.org/gettingstarted/access/> to complete the CITI `Data or Specimens Only Research` course. Show the screenshot of your completion report. 
+
 **SOLUTION**
   <p align="center">
   <img src="./completionreport1.png">
@@ -38,16 +39,23 @@ Please, do **not** put these data files into Git; they are big. Also do **not** 
     Use Bash commands to answer following questions.
 
 3. What's the output of following bash script?
-    ```{bash, eval=FALSE}
+Display the number of lines in each `csv` file.
+
+**SOLUTION** The output of above code chunk
+    ```{bash, eval=TRUE, echo=FALSE}
     for datafile in /home/203bdata/mimic-iii/*.csv
       do
         ls $datafile
       done
     ```
-Display the number of lines in each `csv` file.
 
 4. Display the first few lines of `ADMISSIONS.csv`. How many rows are in this data file? How many unique patients (identified by `SUBJECT_ID`) are in this data file? What are the possible values taken by each of the variable `INSURANCE`, `LANGUAGE`, `RELIGION`, `MARITAL_STATUS`, and `ETHNICITY`? How many (unique) patients are Hispanic? (Hint: combine Linux comamnds `head`, `tail`, `awk`, `uniq`, `wc`, `sort` and so on using pipe.)
 
+**SOLUTION**
+  Let's display first 10 lines of 'ADMISSIONS.csv'
+    ```{bash}
+    head /home/203bdata/mimic-iii/ADMISSIONS.csv
+    ```
 ## Q3. More fun with shell
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
