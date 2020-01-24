@@ -91,7 +91,7 @@ Display the number of lines in each `csv` file.
     ```
   The number of hispanic patients is:
     ```{bash, eval=TRUE, echo=FALSE}
-    
+    grep -o 'HISPANIC' /home/203bdata/mimic-iii/ADMISSIONS.csv | wc -l
     ```
     
 ## Q3. More fun with shell
