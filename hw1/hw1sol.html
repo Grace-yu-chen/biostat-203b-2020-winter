@@ -461,6 +461,7 @@ summary {
 <p><strong>SOLUTION</strong> Let’s display first 10 lines of ‘ADMISSIONS.csv’</p>
 <pre><code>```bash
 head /home/203bdata/mimic-iii/ADMISSIONS.csv
+
 ```
 
 ```
@@ -482,10 +483,21 @@ head /home/203bdata/mimic-iii/ADMISSIONS.csv
 <li><p>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</p>
 <pre class="bash"><code>curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt &gt; pride_and_prejudice.txt</code></pre>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p></li>
+</ol>
+<p><strong>SOLUTION</strong></p>
+<pre class="bash"><code>for (name in Elizabeth Jane Lydia Darcy){
+  do
+    echo $name
+    grep -o $name /Users/yuchen/Desktop/UCLA_courses/203B/pride_and_prejudice.txt | wc -l
+    echo
+  done
+}</code></pre>
+<ol start="0" style="list-style-type: decimal">
 <li><p>What’s the difference between the following two commands?</p>
 <pre class="bash"><code>echo 'hello, world' &gt; test1.txt</code></pre>
 <p>and</p>
-<pre class="bash"><code>echo 'hello, world' &gt;&gt; test2.txt</code></pre></li>
+<pre class="bash"><code>echo 'hello, world' &gt;&gt; test2.txt</code></pre>
+<p><strong>SOLUTION</strong> The first command writes ‘hello, world’ into a text file named test1 and covers the contents of the file, while the second command appends ‘hello, world’ to the text file named test2 without changing any initial contents.</p></li>
 <li><p>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>:</p>
 <pre class="bash"><code>#!/bin/sh
 # Select lines from the middle of a file.
