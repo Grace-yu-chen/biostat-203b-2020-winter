@@ -21,8 +21,39 @@ estMeanPrimes = function (x) {
   return (mean(x[ind]))
 }
 
-# simulate data
-x = rnorm(n)
+## generate seed for random number generation
+set.seed (seed)
 
-# estimate mean
-estMeanPrimes(x)
+GenerateData <- function (n, dish){
+  if (dish=="gaussian"){
+    x=rnorm(n.mean=0)
+  }
+  else if (dish="t1"){
+    x=rt(n,df=1)
+  }
+  else if (dish="t5"){
+    x=rt(n,df=5)
+  }
+    return(x)
+}
+
+## calculate MSE for both method
+MSEest <- c()
+MSEclassic <- c()
+
+for (i in (1:rep)) {
+  x <- GenerateData(n,dist)
+  Meanclassic <- mean(x)
+  Meanest <- estMeanPrimes(x)
+  # true mean is set as 0
+  MSEclassic[i] <- (Meanclassic)^2
+  MSEest[i] <- (Meanest)^2
+}
+MSEclassic <- mean(MSEclassic)
+MSEest <- mean(MSEest)
+
+## print out the results
+print(MSEclassic)
+print(MSEest)
+
+
