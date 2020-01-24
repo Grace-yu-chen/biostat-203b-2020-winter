@@ -66,11 +66,28 @@ Display the number of lines in each `csv` file.
     ```
   There shows the number of unique patients in this data file.
     ```{bash, eval=TRUE, echo=FALSE}
-    
+    awk -F, '{print $2}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq | awk 'END {print NR}'
     ```
   The possible values taken by each of the mentioned variable are shown below:
+    **INSURANCE**
     ```{bash, eval=TRUE, echo=FALSE}
-    
+    awk -F, '{print $10}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
+    ```
+    **LANGUAGE**
+    ```{bash, eval=TRUE, echo=FALSE}
+    awk -F, '{print $11}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
+    ```
+    **RELIGION**
+    ```{bash, eval=TRUE, echo=FALSE}
+    awk -F, '{print $12}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
+    ```    
+    **MARITAL_STATUS**
+    ```{bash, eval=TRUE, echo=FALSE}
+    awk -F, '{print $13}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
+    ```
+    **ETHNICITY**
+    ```{bash, eval=TRUE, echo=FALSE}
+    awk -F, '{print $14}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
     ```
   The number of hispanic patients is:
     ```{bash, eval=TRUE, echo=FALSE}
@@ -187,4 +204,10 @@ for both methods.
 
   **SOLUTION**
   
+  ```{bash}
+  cat Q4.R
+  ```
+  ```{bash}
+  Rscript Q4.R
+  ```
 

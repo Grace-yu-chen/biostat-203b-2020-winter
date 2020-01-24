@@ -24,10 +24,13 @@ for (dist in distTypes){
   for (n in nVals) {
     filename <- paste("n_",n,"_dist_",dist,".txt",sep="")
     datalist <- read.table(filename)
+    datalist <- datalist[,2]
+    data <- c(data,datalist)
     # the first coloumn of the table
     N <- c(N, rep(n,2))
   }
 }
+N <- N[1:10]
 # the second coloumn for the table
 Method <- rep(c('PrimeAvg','SampAvg'),each=5)
 ## built a table to display results
