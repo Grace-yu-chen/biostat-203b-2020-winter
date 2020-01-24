@@ -629,8 +629,125 @@ chmod u+x middle.sh
 <pre><code>## [1] 0.01146443
 ## [1] 0.03926458</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li><p>Modify the <a href="https://ucla-biostat203b-2020winter.github.io/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 203</code>.</p></li>
-<li><p>Write an R script to collect simulation results from output files and print average MSEs in a table of format</p></li>
+<li>Modify the <a href="https://ucla-biostat203b-2020winter.github.io/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 203</code>.</li>
+</ol>
+<p><strong>SOLUTION</strong></p>
+<p>Let’s take a look at the modified autoSim.R</p>
+<pre class="bash"><code>cat autoSim.R</code></pre>
+<pre><code>## # autoSim.R
+## 
+## ## parsing command arguments
+## for (arg in commandArgs(TRUE)) {
+##   eval(parse(text=arg))
+## }
+## 
+## # call R
+## nVals &lt;- seq(100, 500, by=100)
+## distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)
+## for (dist in distTypes){
+##   for (n in nVals) {
+##     oFile &lt;- paste(&quot;n&quot;, n,&quot;dist&quot;,dist, &quot;.txt&quot;, sep=&quot;&quot;)
+##     arg = paste(&quot;n=&quot;, n, &quot; dist=&quot;, shQuote(shQuote(dist)),
+##                 &quot; seed=&quot;, seed, &quot; rep=&quot;, rep)
+##     sysCall = paste(&quot;nohup Rscript runSim.R &quot;, arg, &quot; &gt; &quot;, oFile, sep=&quot;&quot;)
+##     system(sysCall, wait = FALSE)
+##     print(paste(&quot;sysCall=&quot;, sysCall, sep=&quot;&quot;))
+##   }
+## }</code></pre>
+<p>Run the modified autoSim.R</p>
+<pre class="bash"><code>Rscript autoSim.R seed=203 rep=50</code></pre>
+<pre><code>## [1] &quot;sysCall=nohup Rscript runSim.R n= 100  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n100distgaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 200  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n200distgaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 300  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n300distgaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 400  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n400distgaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 500  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n500distgaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 100  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n100distt1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 200  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n200distt1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 300  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n300distt1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 400  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n400distt1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 500  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n500distt1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 100  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n100distt5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 200  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n200distt5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 300  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n300distt5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 400  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n400distt5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n= 500  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n500distt5.txt&quot;
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted
+## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
+## 1: n=
+##    ^
+## Calls: eval -&gt; parse
+## Execution halted</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Write an R script to collect simulation results from output files and print average MSEs in a table of format</li>
 </ol>
 <table>
 <thead>

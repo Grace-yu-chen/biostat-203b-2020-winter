@@ -160,6 +160,16 @@ for both methods.
 
 2. Modify the [`autoSim.R`](https://ucla-biostat203b-2020winter.github.io/slides/02-linux/autoSim.R) script to run simulations with combinations of sample sizes `nVals = seq(100, 500, by=100)` and distributions `distTypes = c("gaussian", "t1", "t5")` and write output to appropriately named files. Use `rep = 50`, and `seed = 203`. 
 
+  **SOLUTION**
+  
+  Let's take a look at the modified autoSim.R
+  ```{bash}
+  cat autoSim.R
+  ```
+  Run the modified autoSim.R
+  ```{bash}
+  Rscript autoSim.R seed=203 rep=50
+  ```
 3. Write an R script to collect simulation results from output files and print average MSEs in a table of format
 
 | $n$ | Method   | Gaussian | $t_5$ | $t_1$ |
