@@ -493,23 +493,23 @@ summary {
 <pre class="bash"><code>   for namei in Elizabeth Jane Lydia Darcy
    do
     echo $namei
-    grep -o $namei /home/yuchen/pride_and_prejudice.txt | wc -l
+    grep -o $namei /home/chenyu1997/pride_and_prejudice.txt | wc -l
     echo
    done</code></pre>
 <pre><code>## Elizabeth
-## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## grep: /home/chenyu1997/pride_and_prejudice.txt: No such file or directory
 ## 0
 ## 
 ## Jane
-## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## grep: /home/chenyu1997/pride_and_prejudice.txt: No such file or directory
 ## 0
 ## 
 ## Lydia
-## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## grep: /home/chenyu1997/pride_and_prejudice.txt: No such file or directory
 ## 0
 ## 
 ## Darcy
-## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## grep: /home/chenyu1997/pride_and_prejudice.txt: No such file or directory
 ## 0</code></pre>
 <ol start="0" style="list-style-type: decimal">
 <li><p>What’s the difference between the following two commands?</p>
@@ -622,12 +622,11 @@ chmod u+x middle.sh
 ## MSEest &lt;- mean(MSEest)
 ## 
 ## ## print out the results
-## print(MSEclassic)
-## print(MSEest)</code></pre>
+## cat(MSEclassic)
+## cat(MSEest)</code></pre>
 <p>Run the R code with specific argument</p>
 <pre class="bash"><code>Rscript runSim.R  n=100 dist=\&quot;gaussian\&quot; seed=203 rep=50 </code></pre>
-<pre><code>## [1] 0.01146443
-## [1] 0.03926458</code></pre>
+<pre><code>## 0.011464430.03926458</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Modify the <a href="https://ucla-biostat203b-2020winter.github.io/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 203</code>.</li>
 </ol>
@@ -646,106 +645,31 @@ chmod u+x middle.sh
 ## distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)
 ## for (dist in distTypes){
 ##   for (n in nVals) {
-##     oFile &lt;- paste(&quot;n&quot;, n,&quot;dist&quot;,dist, &quot;.txt&quot;, sep=&quot;&quot;)
+##     oFile &lt;- paste(&quot;n_&quot;, n,&quot;_dist_&quot;,dist, &quot;.txt&quot;, sep=&quot;&quot;)
 ##     arg = paste(&quot;n=&quot;, n, &quot; dist=&quot;, shQuote(shQuote(dist)),
-##                 &quot; seed=&quot;, seed, &quot; rep=&quot;, rep)
-##     sysCall = paste(&quot;nohup Rscript runSim.R &quot;, arg, &quot; &gt; &quot;, oFile, sep=&quot;&quot;)
+##                 &quot; seed=&quot;, seed, &quot; rep=&quot;, rep, sep=&quot;&quot;)
+##     sysCall = paste(&quot;nohup Rscript runSim.R &quot;,arg, &quot; &gt; &quot;, oFile, sep=&quot;&quot;)
 ##     system(sysCall, wait = FALSE)
 ##     print(paste(&quot;sysCall=&quot;, sysCall, sep=&quot;&quot;))
 ##   }
 ## }</code></pre>
 <p>Run the modified autoSim.R</p>
 <pre class="bash"><code>Rscript autoSim.R seed=203 rep=50</code></pre>
-<pre><code>## [1] &quot;sysCall=nohup Rscript runSim.R n= 100  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n100distgaussian.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 200  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n200distgaussian.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 300  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n300distgaussian.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 400  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n400distgaussian.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 500  dist= \&quot;'gaussian'\&quot;  seed= 203  rep= 50 &gt; n500distgaussian.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 100  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n100distt1.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 200  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n200distt1.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 300  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n300distt1.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 400  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n400distt1.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 500  dist= \&quot;'t1'\&quot;  seed= 203  rep= 50 &gt; n500distt1.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 100  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n100distt5.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 200  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n200distt5.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 300  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n300distt5.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 400  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n400distt5.txt&quot;
-## [1] &quot;sysCall=nohup Rscript runSim.R n= 500  dist= \&quot;'t5'\&quot;  seed= 203  rep= 50 &gt; n500distt5.txt&quot;
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted
-## Error in parse(text = arg) : &lt;text&gt;:2:0: unexpected end of input
-## 1: n=
-##    ^
-## Calls: eval -&gt; parse
-## Execution halted</code></pre>
+<pre><code>## [1] &quot;sysCall=nohup Rscript runSim.R n=100 dist=\&quot;'gaussian'\&quot; seed=203 rep=50 &gt; n_100_dist_gaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=200 dist=\&quot;'gaussian'\&quot; seed=203 rep=50 &gt; n_200_dist_gaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=300 dist=\&quot;'gaussian'\&quot; seed=203 rep=50 &gt; n_300_dist_gaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=400 dist=\&quot;'gaussian'\&quot; seed=203 rep=50 &gt; n_400_dist_gaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=500 dist=\&quot;'gaussian'\&quot; seed=203 rep=50 &gt; n_500_dist_gaussian.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=100 dist=\&quot;'t1'\&quot; seed=203 rep=50 &gt; n_100_dist_t1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=200 dist=\&quot;'t1'\&quot; seed=203 rep=50 &gt; n_200_dist_t1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=300 dist=\&quot;'t1'\&quot; seed=203 rep=50 &gt; n_300_dist_t1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=400 dist=\&quot;'t1'\&quot; seed=203 rep=50 &gt; n_400_dist_t1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=500 dist=\&quot;'t1'\&quot; seed=203 rep=50 &gt; n_500_dist_t1.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=100 dist=\&quot;'t5'\&quot; seed=203 rep=50 &gt; n_100_dist_t5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=200 dist=\&quot;'t5'\&quot; seed=203 rep=50 &gt; n_200_dist_t5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=300 dist=\&quot;'t5'\&quot; seed=203 rep=50 &gt; n_300_dist_t5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=400 dist=\&quot;'t5'\&quot; seed=203 rep=50 &gt; n_400_dist_t5.txt&quot;
+## [1] &quot;sysCall=nohup Rscript runSim.R n=500 dist=\&quot;'t5'\&quot; seed=203 rep=50 &gt; n_500_dist_t5.txt&quot;</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Write an R script to collect simulation results from output files and print average MSEs in a table of format</li>
 </ol>
@@ -832,6 +756,7 @@ chmod u+x middle.sh
 </tr>
 </tbody>
 </table>
+<p><strong>SOLUTION</strong></p>
 </div>
 
 

@@ -53,7 +53,7 @@ MSEclassic <- mean(MSEclassic)
 MSEest <- mean(MSEest)
 
 ## print out the results
-print(MSEclassic)
-print(MSEest)
+cat(MSEclassic)
+cat(MSEest)
 
 
