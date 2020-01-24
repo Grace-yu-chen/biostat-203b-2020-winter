@@ -24,14 +24,14 @@ estMeanPrimes = function (x) {
 ## generate seed for random number generation
 set.seed (seed)
 
-GenerateData <- function (n, dish){
-  if (dish=="gaussian"){
-    x=rnorm(n.mean=0)
+GenerateData <- function (n, dist){
+  if (dist=="gaussian"){
+    x=rnorm(n,mean=0)
   }
-  else if (dish="t1"){
+  else if (dist=="t1"){
     x=rt(n,df=1)
   }
-  else if (dish="t5"){
+  else if (dist=="t5"){
     x=rt(n,df=5)
   }
     return(x)

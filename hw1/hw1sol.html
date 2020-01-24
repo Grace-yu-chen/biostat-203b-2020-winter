@@ -593,14 +593,14 @@ chmod u+x middle.sh
 ## ## generate seed for random number generation
 ## set.seed (seed)
 ## 
-## GenerateData &lt;- function (n, dish){
-##   if (dish==&quot;gaussian&quot;){
-##     x=rnorm(n.mean=0)
+## GenerateData &lt;- function (n, dist){
+##   if (dist==&quot;gaussian&quot;){
+##     x=rnorm(n,mean=0)
 ##   }
-##   else if (dish=&quot;t1&quot;){
+##   else if (dist==&quot;t1&quot;){
 ##     x=rt(n,df=1)
 ##   }
-##   else if (dish=&quot;t5&quot;){
+##   else if (dist==&quot;t5&quot;){
 ##     x=rt(n,df=5)
 ##   }
 ##     return(x)
@@ -624,6 +624,10 @@ chmod u+x middle.sh
 ## ## print out the results
 ## print(MSEclassic)
 ## print(MSEest)</code></pre>
+<p>Run the R code with specific argument</p>
+<pre class="bash"><code>Rscript runSim.R  n=100 dist=\&quot;gaussian\&quot; seed=203 rep=50 </code></pre>
+<pre><code>## [1] 0.01146443
+## [1] 0.03926458</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Modify the <a href="https://ucla-biostat203b-2020winter.github.io/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 203</code>.</p></li>
 <li><p>Write an R script to collect simulation results from output files and print average MSEs in a table of format</p></li>
