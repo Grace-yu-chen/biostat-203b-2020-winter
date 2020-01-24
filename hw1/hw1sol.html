@@ -377,7 +377,8 @@ summary {
 <li><p>Top directories of the repository should be <code>hw1</code>, <code>hw2</code>, … Maintain two branches <code>master</code> and <code>develop</code>. The <code>develop</code> branch will be your main playground, the place where you develop solution (code) to homework problems and write up report. The <code>master</code> branch will be your presentation area. Submit your homework files (R markdown file <code>Rmd</code>, <code>html</code> file converted from R markdown, all code and data sets to reproduce results) in <code>master</code> branch.</p></li>
 <li><p>After each homework due date, teaching assistant and instructor will check out your master branch for grading. Tag each of your homework submissions with tag names <code>hw1</code>, <code>hw2</code>, … Tagging time will be used as your submission time. That means if you tag your <code>hw1</code> submission after deadline, penalty points will be deducted for late submission.</p></li>
 </ol>
-<p><strong>SOLUTION</strong> The solution for question 1 is shown.</p>
+<p><strong>SOLUTION</strong></p>
+<p>The solution for question 1 is shown.</p>
 </div>
 <div id="q2.-linux-shell-commands" class="section level2">
 <h2>Q2. Linux Shell Commands</h2>
@@ -426,7 +427,8 @@ summary {
 <p>Use Bash commands to answer following questions.</p></li>
 <li><p>What’s the output of following bash script? Display the number of lines in each <code>csv</code> file.</p></li>
 </ol>
-<p><strong>SOLUTION</strong> The output of above code chunk</p>
+<p><strong>SOLUTION</strong></p>
+<p>The output of above code chunk</p>
 <pre><code>```
 ## /home/203bdata/mimic-iii/ADMISSIONS.csv
 ## /home/203bdata/mimic-iii/CALLOUT.csv
@@ -458,13 +460,9 @@ summary {
 <ol start="4" style="list-style-type: decimal">
 <li>Display the first few lines of <code>ADMISSIONS.csv</code>. How many rows are in this data file? How many unique patients (identified by <code>SUBJECT_ID</code>) are in this data file? What are the possible values taken by each of the variable <code>INSURANCE</code>, <code>LANGUAGE</code>, <code>RELIGION</code>, <code>MARITAL_STATUS</code>, and <code>ETHNICITY</code>? How many (unique) patients are Hispanic? (Hint: combine Linux comamnds <code>head</code>, <code>tail</code>, <code>awk</code>, <code>uniq</code>, <code>wc</code>, <code>sort</code> and so on using pipe.)</li>
 </ol>
-<p><strong>SOLUTION</strong> Let’s display first 10 lines of ‘ADMISSIONS.csv’</p>
-<pre><code>```bash
-head /home/203bdata/mimic-iii/ADMISSIONS.csv
-
-```
-
-```
+<p><strong>SOLUTION</strong></p>
+<p>Let’s display first 10 lines of ‘ADMISSIONS.csv’</p>
+<pre><code>```
 ## &quot;ROW_ID&quot;,&quot;SUBJECT_ID&quot;,&quot;HADM_ID&quot;,&quot;ADMITTIME&quot;,&quot;DISCHTIME&quot;,&quot;DEATHTIME&quot;,&quot;ADMISSION_TYPE&quot;,&quot;ADMISSION_LOCATION&quot;,&quot;DISCHARGE_LOCATION&quot;,&quot;INSURANCE&quot;,&quot;LANGUAGE&quot;,&quot;RELIGION&quot;,&quot;MARITAL_STATUS&quot;,&quot;ETHNICITY&quot;,&quot;EDREGTIME&quot;,&quot;EDOUTTIME&quot;,&quot;DIAGNOSIS&quot;,&quot;HOSPITAL_EXPIRE_FLAG&quot;,&quot;HAS_CHARTEVENTS_DATA&quot;
 ## 21,22,165315,2196-04-09 12:26:00,2196-04-10 15:54:00,,&quot;EMERGENCY&quot;,&quot;EMERGENCY ROOM ADMIT&quot;,&quot;DISC-TRAN CANCER/CHLDRN H&quot;,&quot;Private&quot;,,&quot;UNOBTAINABLE&quot;,&quot;MARRIED&quot;,&quot;WHITE&quot;,2196-04-09 10:06:00,2196-04-09 13:24:00,&quot;BENZODIAZEPINE OVERDOSE&quot;,0,1
 ## 22,23,152223,2153-09-03 07:15:00,2153-09-08 19:10:00,,&quot;ELECTIVE&quot;,&quot;PHYS REFERRAL/NORMAL DELI&quot;,&quot;HOME HEALTH CARE&quot;,&quot;Medicare&quot;,,&quot;CATHOLIC&quot;,&quot;MARRIED&quot;,&quot;WHITE&quot;,,,&quot;CORONARY ARTERY DISEASE\CORONARY ARTERY BYPASS GRAFT/SDA&quot;,0,1
@@ -476,6 +474,13 @@ head /home/203bdata/mimic-iii/ADMISSIONS.csv
 ## 28,28,162569,2177-09-01 07:15:00,2177-09-06 16:00:00,,&quot;ELECTIVE&quot;,&quot;PHYS REFERRAL/NORMAL DELI&quot;,&quot;HOME HEALTH CARE&quot;,&quot;Medicare&quot;,,&quot;CATHOLIC&quot;,&quot;MARRIED&quot;,&quot;WHITE&quot;,,,&quot;CORONARY ARTERY DISEASE\CORONARY ARTERY BYPASS GRAFT/SDA&quot;,0,1
 ## 29,30,104557,2172-10-14 14:17:00,2172-10-19 14:37:00,,&quot;URGENT&quot;,&quot;TRANSFER FROM HOSP/EXTRAM&quot;,&quot;HOME HEALTH CARE&quot;,&quot;Medicare&quot;,,&quot;CATHOLIC&quot;,&quot;MARRIED&quot;,&quot;UNKNOWN/NOT SPECIFIED&quot;,,,&quot;UNSTABLE ANGINA\CATH&quot;,0,1
 ```</code></pre>
+<p>There shows the number of rows in this data file.</p>
+<pre><code>```
+## 58977
+```</code></pre>
+<p>There shows the number of unique patients in this data file.</p>
+<p>The possible values taken by each of the mentioned variable are shown below:</p>
+<p>The number of hispanic patients is:</p>
 </div>
 <div id="q3.-more-fun-with-shell" class="section level2">
 <h2>Q3. More fun with shell</h2>
@@ -485,19 +490,36 @@ head /home/203bdata/mimic-iii/ADMISSIONS.csv
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p></li>
 </ol>
 <p><strong>SOLUTION</strong></p>
-<pre class="bash"><code>for (name in Elizabeth Jane Lydia Darcy){
-  do
-    echo $name
-    grep -o $name /Users/yuchen/Desktop/UCLA_courses/203B/pride_and_prejudice.txt | wc -l
+<pre class="bash"><code>   for namei in Elizabeth Jane Lydia Darcy
+   do
+    echo $namei
+    grep -o $namei /home/yuchen/pride_and_prejudice.txt | wc -l
     echo
-  done
-}</code></pre>
+   done</code></pre>
+<pre><code>## Elizabeth
+## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## 0
+## 
+## Jane
+## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## 0
+## 
+## Lydia
+## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## 0
+## 
+## Darcy
+## grep: /home/yuchen/pride_and_prejudice.txt: No such file or directory
+## 0</code></pre>
 <ol start="0" style="list-style-type: decimal">
 <li><p>What’s the difference between the following two commands?</p>
 <pre class="bash"><code>echo 'hello, world' &gt; test1.txt</code></pre>
 <p>and</p>
-<pre class="bash"><code>echo 'hello, world' &gt;&gt; test2.txt</code></pre>
-<p><strong>SOLUTION</strong> The first command writes ‘hello, world’ into a text file named test1 and covers the contents of the file, while the second command appends ‘hello, world’ to the text file named test2 without changing any initial contents.</p></li>
+<pre class="bash"><code>echo 'hello, world' &gt;&gt; test2.txt</code></pre></li>
+</ol>
+<p><strong>SOLUTION</strong></p>
+<p>The first command directs ‘hello, world’ into a text file named test1 and covers the contents of the file, while the second command appends ‘hello, world’ to the text file named test2 without changing any initial contents.</p>
+<ol start="0" style="list-style-type: decimal">
 <li><p>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>:</p>
 <pre class="bash"><code>#!/bin/sh
 # Select lines from the middle of a file.
@@ -506,6 +528,32 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <p>Using <code>chmod</code> make the file executable by the owner, and run</p>
 <pre class="bash"><code>./middle.sh pride_and_prejudice.txt 20 5</code></pre>
 <p>Explain the output. Explain the meaning of <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script. Why do we need the first line of the shell script?</p></li>
+</ol>
+<p><strong>SOLUTION</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>Let’s take a look at the file.</li>
+</ol>
+<pre class="bash"><code>cat middle.sh</code></pre>
+<pre><code>## ```{bash eval=FALSE}
+##     #!/bin/sh
+##     # Select lines from the middle of a file.
+##     # Usage: bash middle.sh filename end_line num_lines
+##     head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;
+##     ```</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Using <code>chmod</code> make the file executable by the owner, and run</li>
+</ol>
+<pre><code>```bash
+chmod u+x middle.sh
+./middle.sh pride_and_prejudice.txt 20 5
+```
+
+```
+## ./middle.sh: line 6: {bash: command not found
+## head: cannot open ‘pride_and_prejudice.txt’ for reading: No such file or directory
+```</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Explain. The first line tells the system to use <code>/bin/sh</code> as the interprater to run the following script.</li>
 </ol>
 </div>
 <div id="q4.-r-batch-run" class="section level2">

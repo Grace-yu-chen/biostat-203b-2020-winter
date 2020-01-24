@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 4. After each homework due date, teaching assistant and instructor will check out your master branch for grading. Tag each of your homework submissions with tag names `hw1`, `hw2`, ... Tagging time will be used as your submission time. That means if you tag your `hw1` submission after deadline, penalty points will be deducted for late submission.
 
   **SOLUTION** 
+  
   The solution for question 1 is shown.
 
 ## Q2. Linux Shell Commands
@@ -42,6 +43,7 @@ Please, do **not** put these data files into Git; they are big. Also do **not** 
 Display the number of lines in each `csv` file.
 
   **SOLUTION** 
+  
   The output of above code chunk
     ```{bash, eval=TRUE, echo=FALSE}
     for datafile in /home/203bdata/mimic-iii/*.csv
@@ -53,9 +55,25 @@ Display the number of lines in each `csv` file.
 4. Display the first few lines of `ADMISSIONS.csv`. How many rows are in this data file? How many unique patients (identified by `SUBJECT_ID`) are in this data file? What are the possible values taken by each of the variable `INSURANCE`, `LANGUAGE`, `RELIGION`, `MARITAL_STATUS`, and `ETHNICITY`? How many (unique) patients are Hispanic? (Hint: combine Linux comamnds `head`, `tail`, `awk`, `uniq`, `wc`, `sort` and so on using pipe.)
 
   **SOLUTION**
+  
   Let's display first 10 lines of 'ADMISSIONS.csv'
-    ```{bash}
+    ```{bash, eval=TRUE, echo=FALSE}
     head /home/203bdata/mimic-iii/ADMISSIONS.csv
+    ```
+  There shows the number of rows in this data file.
+    ```{bash, eval=TRUE, echo=FALSE}
+    wc -l < /home/203bdata/mimic-iii/ADMISSIONS.csv
+    ```
+  There shows the number of unique patients in this data file.
+    ```{bash, eval=TRUE, echo=FALSE}
+    
+    ```
+  The possible values taken by each of the mentioned variable are shown below:
+    ```{bash, eval=TRUE, echo=FALSE}
+    
+    ```
+  The number of hispanic patients is:
+    ```{bash, eval=TRUE, echo=FALSE}
     
     ```
     
@@ -68,14 +86,13 @@ Display the number of lines in each `csv` file.
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
 
   **SOLUTION**
-  ```{bash, eval=FALSE}
-  for (name in Elizabeth Jane Lydia Darcy){
-    do
-      echo $name
-      grep -o $name /Users/yuchen/Desktop/UCLA_courses/203B/pride_and_prejudice.txt | wc -l
+  ```{bash}
+     for namei in Elizabeth Jane Lydia Darcy
+     do
+      echo $namei
+      grep -o $namei /home/yuchen/pride_and_prejudice.txt | wc -l
       echo
-    done
-  }
+     done
   ```
 
 0. What's the difference between the following two commands?
@@ -86,8 +103,10 @@ Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` lo
     ```{bash eval=FALSE}
     echo 'hello, world' >> test2.txt
     ```
+
   **SOLUTION**
-  The first command writes 'hello, world' into a text file named test1 and covers the contents of the file, while the second command appends 'hello, world' to the text file named test2 without changing any initial contents.
+  
+  The first command directs 'hello, world' into a text file named test1 and covers the contents of the file, while the second command appends 'hello, world' to the text file named test2 without changing any initial contents.
 
 0. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
     ```{bash eval=FALSE}
@@ -101,6 +120,22 @@ Using `chmod` make the file executable by the owner, and run
     ./middle.sh pride_and_prejudice.txt 20 5
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
+
+  **SOLUTION**
+  
+  a. Let's take a look at the file.
+  ```{bash}
+  cat middle.sh
+  ```
+  
+  b. Using `chmod` make the file executable by the owner, and run 
+    ```{bash eval=TRUE}
+    chmod u+x middle.sh
+    ./middle.sh pride_and_prejudice.txt 20 5
+    ```
+    
+  c. Explain.
+    The first line tells the system to use `/bin/sh` as the interprater to run the following script.
 
 ## Q4. R Batch Run
 
