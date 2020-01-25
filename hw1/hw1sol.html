@@ -897,41 +897,40 @@ summary {
 </table>
 <p><strong>SOLUTION</strong></p>
 <pre class="bash"><code>  cat table.R</code></pre>
-<pre><code>## datalist &lt;- c()
-## data &lt;- c()
+<pre><code>## results &lt;- c() 
 ## N &lt;- c()
 ## nVals &lt;- seq(100, 500, by=100)
 ## distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)
-## for (dist in distTypes){
-##   for (n in nVals) {
-##     filename &lt;- paste(&quot;/home/chenyu1997/biostat-203b-2020-winter/hw1/n_&quot;,n,
+## for (dist in distTypes) {
+##   for (n in nVals){
+##     oFile &lt;- paste(&quot;/home/chenyu1997/biostat-203b-2020-winter/hw1/n_&quot;,n,
 ##                       &quot;_dist_&quot;,dist, &quot;.txt&quot;, sep=&quot;&quot;)
-##     datalist &lt;- read.table(filename)
-##     datalist &lt;- datalist[,2]
-##     data &lt;- c(data,datalist)
-##     # the first coloumn of the table
-##     N &lt;- c(N, rep(n,2))
+##     Tresults &lt;- read.table(oFile)
+##     Tresults &lt;- Tresults[,2]
+##     results &lt;- c(results,Tresults)
+##     N &lt;- c(N,rep(n,2))
 ##   }
 ## }
 ## N &lt;- N[1:10]
 ## # the second coloumn for the table
 ## Method &lt;- rep(c('PrimeAvg','SampAvg'),5)
 ## # build a table to display results
-## table &lt;- data.frame(n=N,Method=Method,Gaussian=data[1:10],t_5=data[21:30],t_1=data[11:20])
-## print(table)</code></pre>
+## results_table &lt;- data.frame(n=N,Method=Method,Gaussian=results[1:10],t_1=results[11:20],
+##                             t_5=results[21:30])
+## print(results_table)</code></pre>
 <pre class="bash"><code>  Rscript table.R</code></pre>
 <pre><code>## There were 15 warnings (use warnings() to see them)
-##      n   Method     Gaussian t_5        t_1
-## 1  100 PrimeAvg 3.926458e-02  NA 0.04728191
-## 2  100  SampAvg 2.400161e-02  NA 0.04396528
-## 3  200 PrimeAvg 2.051436e-02  NA 0.04246682
-## 4  200  SampAvg 1.345600e-02  NA 0.02795691
-## 5  300 PrimeAvg 9.396678e-03  NA 0.01990023
-## 6  300  SampAvg 4.372672e+01  NA         NA
-## 7  400 PrimeAvg 2.091532e+01  NA         NA
-## 8  400  SampAvg 1.163967e+02  NA         NA
-## 9  500 PrimeAvg 4.829149e+01  NA         NA
-## 10 500  SampAvg 1.528085e+02  NA         NA</code></pre>
+##      n   Method     Gaussian        t_1 t_5
+## 1  100 PrimeAvg 3.926458e-02 0.04728191  NA
+## 2  100  SampAvg 2.400161e-02 0.04396528  NA
+## 3  200 PrimeAvg 2.051436e-02 0.04246682  NA
+## 4  200  SampAvg 1.345600e-02 0.02795691  NA
+## 5  300 PrimeAvg 9.396678e-03 0.01990023  NA
+## 6  300  SampAvg 4.372672e+01         NA  NA
+## 7  400 PrimeAvg 2.091532e+01         NA  NA
+## 8  400  SampAvg 1.163967e+02         NA  NA
+## 9  500 PrimeAvg 4.829149e+01         NA  NA
+## 10 500  SampAvg 1.528085e+02         NA  NA</code></pre>
 </div>
 
 
