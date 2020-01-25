@@ -741,9 +741,11 @@ summary {
 ## ## generate seed for random number generation
 ## set.seed (seed)
 ## 
-## GenerateData &lt;- function (n, dist){
+## MSEclassic &lt;- 0
+## MSEest &lt;- 0
+## for (r in 1:rep){
 ##   if (dist==&quot;gaussian&quot;){
-##     x=rnorm(n,mean=0)
+##     x=rnorm(n)
 ##   }
 ##   else if (dist==&quot;t1&quot;){
 ##     x=rt(n,df=1)
@@ -751,29 +753,19 @@ summary {
 ##   else if (dist==&quot;t5&quot;){
 ##     x=rt(n,df=5)
 ##   }
-##     return(x)
+##   else{
+##     stop(&quot;unrecognized distribution&quot;)
+##   }
+##   ## calculate MSE for both method
+##   MSEclassic &lt;- MSEclassic + mean(x)^2
+##   MSEest &lt;- MSEest + estMeanPrimes(x)^2
 ## }
-## 
-## ## calculate MSE for both method
-## MSEest &lt;- c()
-## MSEclassic &lt;- c()
-## 
-## for (i in (1:rep)) {
-##   x &lt;- GenerateData(n,dist)
-##   Meanclassic &lt;- mean(x)
-##   Meanest &lt;- estMeanPrimes(x)
-##   # true mean is set as 0
-##   MSEclassic[i] &lt;- (Meanclassic)^2
-##   MSEest[i] &lt;- (Meanest)^2
-## }
-## MSEclassic &lt;- mean(MSEclassic)
-## MSEest &lt;- mean(MSEest)
 ## 
 ## ## print out the results
 ## cat(MSEclassic/rep,&quot;\t&quot;, MSEest/rep)</code></pre>
 <p>Run the R code with specific argument</p>
 <pre class="bash"><code>  Rscript runSim.R  n=100 dist=\&quot;gaussian\&quot; seed=203 rep=50 </code></pre>
-<pre><code>## 0.0002292886      0.0007852917</code></pre>
+<pre><code>## 0.01146443    0.03926458</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Modify the <a href="https://ucla-biostat203b-2020winter.github.io/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 203</code>.</li>
 </ol>
@@ -929,17 +921,17 @@ summary {
 ## print(table)</code></pre>
 <pre class="bash"><code>  Rscript table.R</code></pre>
 <pre><code>## There were 15 warnings (use warnings() to see them)
-##      n   Method     Gaussian t_5          t_1
-## 1  100 PrimeAvg 0.0007852917  NA 0.0009456383
-## 2  100  SampAvg 0.0004800321  NA 0.0008793055
-## 3  200 PrimeAvg 0.0004102872  NA 0.0008493364
-## 4  200  SampAvg 0.0002691201  NA 0.0005591381
-## 5  300 PrimeAvg 0.0001879336  NA 0.0003980045
-## 6  300  SampAvg 0.8745344000  NA           NA
-## 7  400 PrimeAvg 0.4183063000  NA           NA
-## 8  400  SampAvg 2.3279340000  NA           NA
-## 9  500 PrimeAvg 0.9658298000  NA           NA
-## 10 500  SampAvg 3.0561700000  NA           NA</code></pre>
+##      n   Method     Gaussian t_5        t_1
+## 1  100 PrimeAvg 3.926458e-02  NA 0.04728191
+## 2  100  SampAvg 2.400161e-02  NA 0.04396528
+## 3  200 PrimeAvg 2.051436e-02  NA 0.04246682
+## 4  200  SampAvg 1.345600e-02  NA 0.02795691
+## 5  300 PrimeAvg 9.396678e-03  NA 0.01990023
+## 6  300  SampAvg 4.372672e+01  NA         NA
+## 7  400 PrimeAvg 2.091532e+01  NA         NA
+## 8  400  SampAvg 1.163967e+02  NA         NA
+## 9  500 PrimeAvg 4.829149e+01  NA         NA
+## 10 500  SampAvg 1.528085e+02  NA         NA</code></pre>
 </div>
 
 
