@@ -907,7 +907,7 @@ summary {
 ##                       &quot;_dist_&quot;,dist, &quot;.txt&quot;, sep=&quot;&quot;)
 ##     Tresults &lt;- read.table(oFile)
 ##     Tresults &lt;- Tresults[,2]
-##     results &lt;- c(results,Tresults)
+##     results &lt;- c(Tresults,results)
 ##     N &lt;- c(N,rep(n,2))
 ##   }
 ## }
@@ -920,17 +920,17 @@ summary {
 ## print(results_table)</code></pre>
 <pre class="bash"><code>  Rscript table.R</code></pre>
 <pre><code>## There were 15 warnings (use warnings() to see them)
-##      n   Method     Gaussian        t_1 t_5
-## 1  100 PrimeAvg 3.926458e-02 0.04728191  NA
-## 2  100  SampAvg 2.400161e-02 0.04396528  NA
-## 3  200 PrimeAvg 2.051436e-02 0.04246682  NA
-## 4  200  SampAvg 1.345600e-02 0.02795691  NA
-## 5  300 PrimeAvg 9.396678e-03 0.01990023  NA
-## 6  300  SampAvg 4.372672e+01         NA  NA
-## 7  400 PrimeAvg 2.091532e+01         NA  NA
-## 8  400  SampAvg 1.163967e+02         NA  NA
-## 9  500 PrimeAvg 4.829149e+01         NA  NA
-## 10 500  SampAvg 1.528085e+02         NA  NA</code></pre>
+##      n   Method     Gaussian         t_1 t_5
+## 1  100 PrimeAvg   0.01990023 0.009396678  NA
+## 2  100  SampAvg   0.02795691 0.013456000  NA
+## 3  200 PrimeAvg   0.04246682 0.020514360  NA
+## 4  200  SampAvg   0.04396528 0.024001610  NA
+## 5  300 PrimeAvg   0.04728191 0.039264580  NA
+## 6  300  SampAvg 152.80850000          NA  NA
+## 7  400 PrimeAvg  48.29149000          NA  NA
+## 8  400  SampAvg 116.39670000          NA  NA
+## 9  500 PrimeAvg  20.91532000          NA  NA
+## 10 500  SampAvg  43.72672000          NA  NA</code></pre>
 </div>
 
 
