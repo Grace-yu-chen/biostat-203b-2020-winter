@@ -32,9 +32,9 @@ knitr::opts_chunk$set(echo = TRUE)
 </p>
 
 2. The `/home/203bdata/mimic-iii/` folder on teaching server contains data sets from MIMIC-III. See <https://mimic.physionet.org/mimictables/admissions/> for details of each table.  
-    ```{bash}
+```{bash}
     ls -l /home/203bdata/mimic-iii
-    ```
+```
 Please, do **not** put these data files into Git; they are big. Also do **not** copy them into your directory. Just read from the data folder `/home/203bdata/mimic-iii` directly in following exercises. 
 
     Use Bash commands to answer following questions.
@@ -45,61 +45,61 @@ Display the number of lines in each `csv` file.
   **SOLUTION** 
   
   The output of above code chunk
-    ```{bash, eval=TRUE, echo=FALSE}
+```{bash, eval=TRUE, echo=FALSE}
     for datafile in /home/203bdata/mimic-iii/*.csv
       do
         ls $datafile
       done
-    ```
+```
 
 4. Display the first few lines of `ADMISSIONS.csv`. How many rows are in this data file? How many unique patients (identified by `SUBJECT_ID`) are in this data file? What are the possible values taken by each of the variable `INSURANCE`, `LANGUAGE`, `RELIGION`, `MARITAL_STATUS`, and `ETHNICITY`? How many (unique) patients are Hispanic? (Hint: combine Linux comamnds `head`, `tail`, `awk`, `uniq`, `wc`, `sort` and so on using pipe.)
 
   **SOLUTION**
   
   Let's display first 10 lines of 'ADMISSIONS.csv'
-    ```{bash, eval=TRUE, echo=FALSE}
+```{bash, eval=TRUE, echo=FALSE}
     head /home/203bdata/mimic-iii/ADMISSIONS.csv
-    ```
+```
   There shows the number of rows in this data file.
-    ```{bash, eval=TRUE, echo=FALSE}
+```{bash, eval=TRUE, echo=FALSE}
     wc -l < /home/203bdata/mimic-iii/ADMISSIONS.csv
-    ```
+```
   There shows the number of unique patients in this data file.
-    ```{bash, eval=TRUE, echo=FALSE}
+```{bash, eval=TRUE, echo=FALSE}
     awk -F, '{print $2}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq | awk 'END {print NR}'
-    ```
+```
   The possible values taken by each of the mentioned variable are shown below:
-    **INSURANCE**
-    ```{bash, eval=TRUE, echo=FALSE}
+  INSURANCE
+```{bash, eval=TRUE, echo=FALSE}
     awk -F, '{print $10}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
-    ```
-    **LANGUAGE**
-    ```{bash, eval=TRUE, echo=FALSE}
+```
+  LANGUAGE
+```{bash, eval=TRUE, echo=FALSE}
     awk -F, '{print $11}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
-    ```
-    **RELIGION**
-    ```{bash, eval=TRUE, echo=FALSE}
+```
+  RELIGION
+```{bash, eval=TRUE, echo=FALSE}
     awk -F, '{print $12}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
-    ```    
-    **MARITAL_STATUS**
-    ```{bash, eval=TRUE, echo=FALSE}
+```    
+  MARITAL_STATUS
+```{bash, eval=TRUE, echo=FALSE}
     awk -F, '{print $13}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
-    ```
-    **ETHNICITY**
-    ```{bash, eval=TRUE, echo=FALSE}
+```
+  ETHNICITY
+```{bash, eval=TRUE, echo=FALSE}
     awk -F, '{print $14}' /home/203bdata/mimic-iii/ADMISSIONS.csv | tail -n +2 | sort | uniq
-    ```
+```
   The number of hispanic patients is:
-    ```{bash, eval=TRUE, echo=FALSE}
+```{bash, eval=TRUE, echo=FALSE}
     grep -o 'HISPANIC' /home/203bdata/mimic-iii/ADMISSIONS.csv | wc -l
-    ```
+```
     
 ## Q3. More fun with shell
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
-    ```{bash, eval=FALSE}
+```{bash, eval=FALSE}
     curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt > pride_and_prejudice.txt
-    ```
+```
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
 
   **SOLUTION**
@@ -113,29 +113,29 @@ Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` lo
 ```
 
 0. What's the difference between the following two commands?
-    ```{bash eval=FALSE}
+```{bash eval=FALSE}
     echo 'hello, world' > test1.txt
-    ```
+```
     and
-    ```{bash eval=FALSE}
+```{bash eval=FALSE}
     echo 'hello, world' >> test2.txt
-    ```
+```
 
   **SOLUTION**
   
   The first command directs 'hello, world' into a text file named test1 and covers the contents of the file, while the second command appends 'hello, world' to the text file named test2 without changing any initial contents.
 
 0. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
-    ```{bash eval=FALSE}
+```{bash eval=FALSE}
     #!/bin/sh
     # Select lines from the middle of a file.
     # Usage: bash middle.sh filename end_line num_lines
     head -n "$2" "$1" | tail -n "$3"
-    ```
+```
 Using `chmod` make the file executable by the owner, and run 
-    ```{bash eval=FALSE}
+```{bash eval=FALSE}
     ./middle.sh pride_and_prejudice.txt 20 5
-    ```
+```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 
   **SOLUTION**
@@ -146,10 +146,10 @@ Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this sh
 ```
   
   b. Using `chmod` make the file executable by the owner, and run 
-    ```{bash eval=TRUE}
+```{bash eval=TRUE}
     chmod u+x middle.sh
     ./middle.sh pride_and_prejudice.txt 20 5
-    ```
+```
     
   c. Explain.
     The first line tells the system to use `/bin/sh` as the interprater to run the following script.
