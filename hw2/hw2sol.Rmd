@@ -6,10 +6,14 @@ author: YU CHEN (305266880)
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
 ```
 
 Use tidyverse (ggpot2, dplyr) to explore the [MIMIC-III](https://mimic.physionet.org) data introduced in [homework 1](https://ucla-biostat203b-2020winter.github.io/hw/hw1/hw1.html).
+```{r}
+library(tidyverse)
+library(lubridate)
+```
 
 ## Q1
 
@@ -33,13 +37,94 @@ Demographic information of the patients admitted into hospital is available in `
 Note it is possible that one patient (uniquely identified by the `SUBJECT_ID`) is admitted into hospital multiple times. When summarizing some demographic information, it makes sense to summarize based on only unique patients. 
 
 **SOLUTION**
+
+Import data first.
 ```{r}
-library(tidyverse)
-admission <- read_csv("ADMISSIONS.csv")
-admission_year <- admission[ADMITTIME]
-#ggplot(data=admission)+geom_bar(mapping=aes(x=ADMISSION YEAR))
+admission <- read_csv("/home/203bdata/mimic-iii/ADMISSIONS.csv",
+                      col_types = cols(ROW_ID = col_integer(),
+                                       SUBJECT_ID = col_integer(),
+                                       HADM_ID = col_integer(),
+                                       ADMITTIME = col_datetime(),
+                                       DISCHTIME = col_datetime(),
+                                       HOSPITAL_EXPIRE_FLAG = col_logical(),
+                                       HAS_CHARTEVENTS_DATA = col_logical()))
+admission
 ```
 
+- Admission Year
+```{r}
+admission %>%
+  ggplot(aes(x = ADMITTIME)) + 
+  geom_freqpoly(binwidth = 31536000) + 
+  labs(x = "Admission year")
+```
+
+- Admission Month
+```{r}
+admission %>%
+  mutate(adm_month = month(ADMITTIME, label = TRUE)) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = adm_month)) + 
+  labs(x = 'Admission month')
+```
+
+- Admission week day
+```{r}
+admission %>%
+  mutate(adm_wday = wday(ADMITTIME, label = TRUE)) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = adm_wday)) + 
+  labs(x = 'Admission week day')
+```
+We can see from the graph that weekdays are busier than weekends.
+
+- Admission hour
+```{r}
+admission %>%
+  mutate(adm_hour = hour(ADMITTIME)) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = adm_hour)) + 
+  labs(x = 'Admission hour')
+```
+We can see that the 7 am is the busiest time of a day, probably because most people wait and go to hospital the minute it open. Also, hospitals are quite busy in the afternoon as well.
+
+- Length of hospital stay
+```{r}
+admission %>%
+  mutate(hospital_stay = as.numeric(as.duration(DISCHTIME - ADMITTIME) / 86400)) %>%
+  ggplot(aes(x = hospital_stay)) +
+  geom_freqpoly(bins = 50) +
+  labs(x = "Length of hospital stay (days)")
+```
+A better picture of the pattern of length of hospital stay is shown below.
+```{r}
+admission %>%
+  mutate(hospital_stay = as.numeric(as.duration(DISCHTIME - ADMITTIME) / 86400)) %>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = factor(1), y = hospital_stay)) +
+  labs(x = "", y = "Length of hospital stay (days)") + 
+  scale_y_log10()
+```
+It is obvious that most patients stay in hospital for around a week.
+
+- Admission type 
+```{r}
+admission %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = ADMISSION_TYPE)) + 
+  labs(x = "Admission type")
+```
+
+- Number of admissions per patient
+!!!
+
+- Admission location
+```{r}
+admission %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = ADMISSION_LOCATION)) + 
+  labs(x = "Admission location")
+```
 
 
 ## Q2
