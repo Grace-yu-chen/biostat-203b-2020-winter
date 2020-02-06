@@ -218,9 +218,16 @@ patient %>%
 
 - Age at Admission 
 ```{r}
-
+allinf <- inner_join(na.omit(patient, 4:4), na.omit(admission, 5:5), by = "SUBJECT_ID")
+allinf %>%
+  mutate(age = year(ADMITTIME) - year(DOB)) %>%
+  filter(0 < age & age < 150) %>%
+  ggplot(aes(x = age)) +
+  geom_bar() +
+  labs(x = "Age at Admission")
 ```
 
+It shows that the majority of patients are senior (over 60 years old).
 
 ## Q3
 
