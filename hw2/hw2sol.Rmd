@@ -95,7 +95,7 @@ We can see that the 7 am is the busiest time of a day, probably because most peo
 admission %>%
   mutate(hospital_stay = as.numeric(as.duration(DISCHTIME - ADMITTIME) / 86400)) %>%
   ggplot(aes(x = hospital_stay)) +
-  geom_freqpoly(bins = 50) +
+  geom_freqpoly(bins = 100) +
   labs(x = "Length of hospital stay (days)")
 ```
 
@@ -120,11 +120,12 @@ admission %>%
 ```
 
 Most admissions are emergency.
+
 - Number of admissions per patient
 ```{r}
 row <- select(admission, ROW_ID)
-patient <- select(admission, SUBJECT_ID)
-nrow(row)/n_distinct(patient)
+patient_ID <- select(admission, SUBJECT_ID)
+nrow(row)/n_distinct(patient_ID)
 ```
 
 So number of admissions per patient is about 1.27.
@@ -196,6 +197,30 @@ Link the data in `ADMISSION.csv` and `PATIENTS.csv` (<https://mimic.physionet.or
 
 - gender  
 - age at admission 
+
+**SOLUTION**
+
+```{r}
+patient <- read_csv("/home/203bdata/mimic-iii/PATIENTS.csv",
+                    col_types = cols(ROW_ID = col_integer(),
+                                     SUBJECT_ID = col_integer(),
+                                     DOB = col_datetime()))
+patient
+```
+
+- Gender
+```{r}
+patient %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = GENDER)) + 
+  labs(x = "GENDER")
+```
+
+- Age at Admission 
+```{r}
+
+```
+
 
 ## Q3
 
