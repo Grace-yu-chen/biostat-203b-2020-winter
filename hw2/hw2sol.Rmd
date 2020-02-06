@@ -76,6 +76,7 @@ admission %>%
   geom_bar(mapping = aes(x = adm_wday)) + 
   labs(x = 'Admission week day')
 ```
+
 We can see from the graph that weekdays are busier than weekends.
 
 - Admission hour
@@ -86,6 +87,7 @@ admission %>%
   geom_bar(mapping = aes(x = adm_hour)) + 
   labs(x = 'Admission hour')
 ```
+
 We can see that the 7 am is the busiest time of a day, probably because most people wait and go to hospital the minute it open. Also, hospitals are quite busy in the afternoon as well.
 
 - Length of hospital stay
@@ -96,6 +98,7 @@ admission %>%
   geom_freqpoly(bins = 50) +
   labs(x = "Length of hospital stay (days)")
 ```
+
 A better picture of the pattern of length of hospital stay is shown below.
 ```{r}
 admission %>%
@@ -105,6 +108,7 @@ admission %>%
   labs(x = "", y = "Length of hospital stay (days)") + 
   scale_y_log10()
 ```
+
 It is obvious that most patients stay in hospital for around a week.
 
 - Admission type 
@@ -115,17 +119,76 @@ admission %>%
   labs(x = "Admission type")
 ```
 
+Most admissions are emergency.
 - Number of admissions per patient
-!!!
+```{r}
+row <- select(admission, ROW_ID)
+patient <- select(admission, SUBJECT_ID)
+nrow(row)/n_distinct(patient)
+```
+
+So number of admissions per patient is about 1.27.
 
 - Admission location
 ```{r}
-admission %>%
+na.omit(admission, 1:17) %>%
   ggplot() + 
-  geom_bar(mapping = aes(x = ADMISSION_LOCATION)) + 
-  labs(x = "Admission location")
+  geom_bar(mapping = aes(x = MARITAL_STATUS)) + 
+  labs(x = "MARITAL_STATUS")
 ```
 
+It shows that EMERGENCY ROOM ADMIT, PHYS REFERRAL/NORMAL DELI, CLINIC REFERRAL/PREMATURE, and TRANSFER FROM HOSP/EXTRAM are the marjority of admission locations, among which EMERGENCY ROOM ADMIT is the busiest.
+
+- Insurance
+```{r}
+admission %>%
+  ggplot() + 
+  geom_bar(mapping = aes(INSURANCE)) + 
+  labs(x = "INSURANCE")
+```
+
+It shows that most patients have medicare and few patients are self-pay.
+
+- Language 
+```{r}
+na.omit(admission, 1:17) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = LANGUAGE)) + 
+  labs(x = "LANGUAGE")
+```
+
+- Religion 
+```{r}
+na.omit(admission, 1:17) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = substr(RELIGION, 1, 4))) +
+  labs(x = "RELIGION")
+```
+
+- Martial status 
+```{r}
+na.omit(admission, 1:17) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = substr(MARITAL_STATUS, 1, 7))) +
+  labs(x = "MARITAL_STATUS")
+```
+
+- Ethnicity  
+```{r}
+na.omit(admission, 1:17) %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = substr(ETHNICITY, 1, 4))) +
+  labs(x = "ETHNICITY")
+```
+
+- Death 
+```{r}
+DEATH <- select(admission, DEATHTIME)
+death_rate <- sum(!is.na(DEATH))/nrow(DEATH)
+death_rate
+```
+
+So the death rate is about 10%.
 
 ## Q2
 
