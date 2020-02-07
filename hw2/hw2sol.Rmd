@@ -227,6 +227,16 @@ allinf %>%
   labs(x = "Age at Admission")
 ```
 
+```{r}
+allinf <- inner_join(na.omit(patient, 4:4), na.omit(admission, 5:5), by = "SUBJECT_ID")
+allinf %>%
+  mutate(age = year(ADMITTIME) - year(DOB)) %>%
+  filter(0 < age & age < 150) %>%
+  ggplot(aes(x = age)) +
+  geom_freqpoly() +
+  labs(x = "Age at Admission")
+```
+
 It shows that the majority of patients are senior (over 60 years old).
 
 ## Q3
@@ -294,7 +304,27 @@ allinf2 %>%
 We can see that more patients are male.
 
 - Age 
+```{r}
+allinf %>%
+  mutate(age = year(ADMITTIME) - year(DOB)) %>%
+  filter(0 < age & age < 150)  %>%
+  inner_join(ICUSTAYS, by = "SUBJECT_ID") %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = age)) + 
+  labs(x = "Age")
+```
+```{r}
+allinf %>%
+  mutate(age = year(ADMITTIME) - year(DOB)) %>%
+  filter(0 < age & age < 150)  %>%
+  inner_join(ICUSTAYS, by = "SUBJECT_ID") %>%
+  ggplot() + 
+  geom_freqpoly(mapping = aes(x = age)) + 
+  labs(x = "Age")
 
+```
+
+It shows that most ICU patients are senior.
 
 ## Q4 
 
@@ -303,3 +333,36 @@ We can see that more patients are male.
 `D_ITEMS.csv` (<https://mimic.physionet.org/mimictables/d_items/>) is the dictionary for the `ITEMID` in `CHARTEVENTS.csv`. Find potential values of `ITEMID` that correspond to systolic blood pressure, i.e., `LABEL` contains the string `systolic`. 
 
 Compile a tibble that contains the first ICU stay of unique patients, with the patient's demographic information, the first systolic blood pressure measurement during ICU stay, and whether the patient died within 30 days of hospitcal admission.
+
+**SOLUTION**
+
+```{r}
+chartevents <- read_csv("/home/203bdata/mimic-iii/CHARTEVENTS.csv",
+                        col_types = cols(ITEMID = col_integer(),
+                                         ROW_ID = col_integer(),
+                                         SUBJECT_ID = col_integer(),
+                                         HADM_ID = col_integer(),
+                                         ICUSTAY_ID = col_integer(),
+                                         CHARTTIME = col_date(),
+                                         STORETIME = col_date(),
+                                         CGID = col_integer(),
+                                         VALUE = col_number()))
+chartevents
+```
+
+```{r}
+D_items <- read_csv("/home/203bdata/mimic-iii/D_ITEMS.csv",
+                    col_types = cols(ROW_ID = col_integer(),
+                                     ITEMID = col_integer(),
+                                     LABEL = col_character(),
+                                     ABBREVIATION = col_character(),
+                                     DBSOURCE = col_character(),
+                                     LINKSTO = col_character(),
+                                     CATEGORY = col_character(),
+                                     UNITNAME = col_character(),
+                                     PARAM_TYPE = col_character(),
+                                     CONCEPTID = col_integer()))
+D_items
+```
+
+
