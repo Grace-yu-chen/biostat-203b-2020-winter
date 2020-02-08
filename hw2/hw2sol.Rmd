@@ -134,11 +134,11 @@ So number of admissions per patient is about 1.27.
 ```{r}
 na.omit(admission, 1:17) %>%
   ggplot() + 
-  geom_bar(mapping = aes(x = MARITAL_STATUS)) + 
-  labs(x = "MARITAL_STATUS")
+  geom_bar(mapping = aes(x = substr(ADMISSION_LOCATION, 1, 4))) + 
+  labs(x = "ADMISSION LOCATION")
 ```
 
-It shows that EMERGENCY ROOM ADMIT, PHYS REFERRAL/NORMAL DELI, CLINIC REFERRAL/PREMATURE, and TRANSFER FROM HOSP/EXTRAM are the marjority of admission locations, among which EMERGENCY ROOM ADMIT is the busiest.
+It shows that EMERGENCY ROOM ADMIT and CLINIC REFERRAL/PREMATURE are the marjority of admission locations, among which EMERGENCY ROOM ADMIT is the busiest.
 
 - Insurance
 ```{r}
@@ -154,9 +154,11 @@ It shows that most patients have medicare and few patients are self-pay.
 ```{r}
 na.omit(admission, 1:17) %>%
   ggplot() + 
-  geom_bar(mapping = aes(x = LANGUAGE)) + 
+  geom_bar(mapping = aes(x = substr(LANGUAGE, 1, 2))) + 
   labs(x = "LANGUAGE")
 ```
+
+It is abvious that most patients are English-speaking.
 
 - Religion 
 ```{r}
@@ -166,13 +168,17 @@ na.omit(admission, 1:17) %>%
   labs(x = "RELIGION")
 ```
 
+So most patients are CATHOLIC.
+
 - Martial status 
 ```{r}
 na.omit(admission, 1:17) %>%
   ggplot() + 
-  geom_bar(mapping = aes(x = substr(MARITAL_STATUS, 1, 7))) +
+  geom_bar(mapping = aes(x = MARITAL_STATUS)) + 
   labs(x = "MARITAL_STATUS")
 ```
+
+So most patients are married.
 
 - Ethnicity  
 ```{r}
@@ -181,6 +187,8 @@ na.omit(admission, 1:17) %>%
   geom_bar(mapping = aes(x = substr(ETHNICITY, 1, 4))) +
   labs(x = "ETHNICITY")
 ```
+
+So most patients are white.
 
 - Death 
 ```{r}
@@ -216,6 +224,8 @@ patient %>%
   labs(x = "GENDER")
 ```
 
+We can see that more patients are male.
+
 - Age at Admission 
 ```{r}
 allinf <- inner_join(na.omit(patient, 4:4), na.omit(admission, 5:5), by = "SUBJECT_ID")
@@ -226,6 +236,8 @@ allinf %>%
   geom_bar() +
   labs(x = "Age at Admission")
 ```
+
+A better picture of age at admission is shown below:
 
 ```{r}
 allinf <- inner_join(na.omit(patient, 4:4), na.omit(admission, 5:5), by = "SUBJECT_ID")
@@ -382,4 +394,5 @@ final_data <- select(final_data, SUBJECT_ID:INTIME, ADMISSION_TYPE:ETHNICITY, if
 final_data
 ```
 
+A compiled tibble that contains the first ICU stay of unique patients, with the patient’s demographic information, the first systolic blood pressure measurement during ICU stay, and whether the patient died within 30 days of hospitcal admission is shown above.
 
