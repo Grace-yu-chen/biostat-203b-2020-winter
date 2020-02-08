@@ -221,7 +221,7 @@ patient %>%
 allinf <- inner_join(na.omit(patient, 4:4), na.omit(admission, 5:5), by = "SUBJECT_ID")
 allinf %>%
   mutate(age = year(ADMITTIME) - year(DOB)) %>%
-  filter(0 < age & age < 150) %>%
+  filter(0 <= age & age < 150) %>%
   ggplot(aes(x = age)) +
   geom_bar() +
   labs(x = "Age at Admission")
@@ -231,7 +231,7 @@ allinf %>%
 allinf <- inner_join(na.omit(patient, 4:4), na.omit(admission, 5:5), by = "SUBJECT_ID")
 allinf %>%
   mutate(age = year(ADMITTIME) - year(DOB)) %>%
-  filter(0 < age & age < 150) %>%
+  filter(0 <= age & age < 150) %>%
   ggplot(aes(x = age)) +
   geom_freqpoly() +
   labs(x = "Age at Admission")
@@ -307,7 +307,7 @@ We can see that more patients are male.
 ```{r}
 allinf %>%
   mutate(age = year(ADMITTIME) - year(DOB)) %>%
-  filter(0 < age & age < 150)  %>%
+  filter(0 <= age & age < 150)  %>%
   inner_join(ICUSTAYS, by = "SUBJECT_ID") %>%
   ggplot() + 
   geom_bar(mapping = aes(x = age)) + 
@@ -316,7 +316,7 @@ allinf %>%
 ```{r}
 allinf %>%
   mutate(age = year(ADMITTIME) - year(DOB)) %>%
-  filter(0 < age & age < 150)  %>%
+  filter(0 <= age & age < 150)  %>%
   inner_join(ICUSTAYS, by = "SUBJECT_ID") %>%
   ggplot() + 
   geom_freqpoly(mapping = aes(x = age)) + 
@@ -343,8 +343,6 @@ chartevents <- read_csv("/home/203bdata/mimic-iii/CHARTEVENTS.csv",
                                          SUBJECT_ID = col_integer(),
                                          HADM_ID = col_integer(),
                                          ICUSTAY_ID = col_integer(),
-                                         CHARTTIME = col_date(),
-                                         STORETIME = col_date(),
                                          CGID = col_integer(),
                                          VALUE = col_number()))
 chartevents
@@ -362,7 +360,26 @@ D_items <- read_csv("/home/203bdata/mimic-iii/D_ITEMS.csv",
                                      UNITNAME = col_character(),
                                      PARAM_TYPE = col_character(),
                                      CONCEPTID = col_integer()))
-D_items
+D_items <- select(D_items, ITEMID, LABEL, ABBREVIATION, CATEGORY, UNITNAME)
+filter(D_items, grepl("systolic", LABEL))
+```
+
+Potential values of ITEMID that correspond to systolic blood pressure include 226850, 226852, 220050, 220059, and 220179.
+
+```{r}
+# demographic information
+# whether the patient died within 30 days of hospitcal admission
+demographic_information <- select(admission, ADMITTIME, DEATHTIME, SUBJECT_ID:ETHNICITY) %>%
+  mutate("death_time" = as.numeric(as.duration(DEATHTIME - ADMITTIME) / 86400))  %>%
+  mutate("if_30_death" = FALSE)
+demographic_information[, 15][demographic_information[, 14] > 30] <- TRUE
+# the first systolic blood pressure measurement during ICU stay
+first_ICU <- select(ICUSTAYS, SUBJECT_ID, starts_with("FIRST"), INTIME)
+final_data <- inner_join(first_ICU, demographic_information, by = "SUBJECT_ID")
+chartevents <- distinct(chartevents, SUBJECT_ID, .keep_all = TRUE)
+final_data <- left_join(final_data, chartevents, by = "SUBJECT_ID")
+final_data <- select(final_data, SUBJECT_ID:INTIME, ADMISSION_TYPE:ETHNICITY, if_30_death, CHARTTIME:VALUEUOM)
+final_data
 ```
 
 
