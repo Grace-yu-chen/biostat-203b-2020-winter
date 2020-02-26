@@ -15,6 +15,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 library(googlesheets4)
+library(wesanderson)
 
 # no authentication
 sheets_deauth()
@@ -27,15 +28,9 @@ sheets_deauth()
 (death <- 
         read_sheet("1UF2pSkFTURko2OvfHWWlFpDFAr1UxCBA4JLwlSP6KFo", sheet = 4))
 # import data after Feb. 11
-(confirmed <- read_csv
-    ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/
-        csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"))
-(recovered <- read_csv
-    ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/
-        csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"))
-(death <- read_csv
-    ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/
-        csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"))
+(confirmed <- read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"))
+(recovered <- read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"))
+(death <- read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"))
 # tidy data into longer format
 confirmed_long <- confirmed %>%
     pivot_longer(-(`Province/State`:Long), 
@@ -59,17 +54,13 @@ ncov_tbl <- confirmed_long %>%
                  names_to = "Case", 
                  values_to = "Count")
 
-# use GIS data of China
+# map of China using GIS data
 library(sf)
-chn_map <- st_read("./bou2_4p.shp", as_tibble = TRUE) %>%
+chn_map <- st_read("/home/chenyu1997/203b/hw3/Coronavirus/china-province-border-data/bou2_4p.shp", as_tibble = TRUE) %>%
     mutate(NAME = iconv(NAME, from = "GBK"),
            BOU2_4M_ = as.integer(BOU2_4M_),
            BOU2_4M_ID = as.integer(BOU2_4M_ID)) %>%
     mutate(NAME = str_replace_na(NAME, replacement = "澳门特别行政区"))
-chn_map %>%
-    ggplot() + 
-    geom_sf(mapping = aes(geometry = geometry), color = "black", fill = "white") + 
-    theme_bw() # better for maps 
 # create a function to translate Chinese province name to English
 translate <- function(x) {
     sapply(x, function(chn_name) {
@@ -149,28 +140,18 @@ translate <- function(x) {
         return(eng_name)
     })
 }
+# add english name
+chn_prov <- chn_map %>% 
+    count(NAME) %>%
+    mutate(NAME_ENG = translate(NAME))
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
-    )
+    titlePanel("2019-20 Global Coronavirus Outbreak"),
+    
+    
 )
 
 # Define server logic required to draw a histogram
