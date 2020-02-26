@@ -150,30 +150,53 @@ ui <- fluidPage(
 
     # Application title
     titlePanel("Global Coronavirus Outbreak"),
-    sidebarPanel(
-    # input date from 2020-01-01 to current date
-    dateInput('date',
-              label = "Choose a Date",
-              min = "2020-01-01", max = Sys.Date(),
-    ),
-    # input case: confirmed, recovered, death
-    fluidRow(
-        selectInput("case", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), selectize=FALSE  
-        )
-    ),
-    )
+    # tab title
+    tabPanel("Real-time Map",
+             sidebarLayout(
+                 sidebarPanel(
+                     # input date from 2020-01-01 to current date
+                     dateInput('date',
+                               label = "Choose a Date",
+                               min = "2020-01-01", max = Sys.Date(),
+                     ),
+                     # input case: confirmed, recovered, death
+                     fluidRow(
+                         selectInput("case1", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), 
+                                     selectize=FALSE)
+                     ),
+                 ),
+                 # mainpanel
+                 mainPanel(plotOutput("map1"), 
+                           dataTableOutput("table1"))
+             )
+             ) 
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    output$map1 <- renderPlot({
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+            filter(Date == input$date, Case == input$case1) %>%
+            group_by(`Province/State`) %>%  
+            top_n(1, Date) %>% # take the latest count on that date
+            right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>%
+            ggplot() +
+            geom_sf(mapping = aes(fill = Count, geometry = geometry)) +
+            scale_fill_gradientn(colors = wes_palette("Zissou1", 100, type = "continuous"),
+                                 trans = "log10") +
+            theme_bw() +
+            labs(title = str_c(input$case1, " cases"), subtitle = input$date)
+    })
+    
+    output$table1 <- renderDataTable({
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+            filter(Date == input$date, Case == input$case1) %>%
+            group_by(`Province/State`) %>%  
+            top_n(1, Date) %>%
+            right_join(select(chn_prov,-geometry), by = c("Province/State" = "NAME_ENG")) 
     })
 }
 
