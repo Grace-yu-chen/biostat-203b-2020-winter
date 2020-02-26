@@ -149,9 +149,19 @@ chn_prov <- chn_map %>%
 ui <- fluidPage(
 
     # Application title
-    titlePanel("2019-20 Global Coronavirus Outbreak"),
-    
-    
+    titlePanel("Global Coronavirus Outbreak"),
+    sidebarPanel(
+    # input date from 2020-01-01 to current date
+    dateInput('date',
+              label = "Choose a Date",
+              min = "2020-01-01", max = Sys.Date(),
+    ),
+    # input case: confirmed, recovered, death
+    fluidRow(
+        selectInput("case", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), selectize=FALSE  
+        )
+    ),
+    )
 )
 
 # Define server logic required to draw a histogram
