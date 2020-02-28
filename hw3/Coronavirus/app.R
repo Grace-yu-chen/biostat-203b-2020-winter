@@ -18,6 +18,7 @@ library(googlesheets4)
 library(wesanderson)
 library(gganimate)
 library(transformr)
+library(quantmod)
 
 # no authentication
 sheets_deauth()
@@ -148,11 +149,12 @@ chn_prov <- chn_map %>%
     mutate(NAME_ENG = translate(NAME)) # translate function is vectorized
 
 # Define UI for application that draws a histogram
-ui <- navbarPage("Global Coronavirus Outbreak",
+ui <- navbarPage("Coronavirus Visualization App",
 
     # Application title
 #    titlePanel("Global Coronavirus Outbreak"),
-    tabPanel("Real-time Coronavirus Map in China",
+navbarMenu("China",
+    tabPanel("Coronavirus Outbreak",
              sidebarLayout(
                  sidebarPanel(
                      # input date from 2020-01-01 to current date
@@ -169,16 +171,28 @@ ui <- navbarPage("Global Coronavirus Outbreak",
                  # mainpanel
                  mainPanel(
                      tabsetPanel(
-                         tabPanel("MAP", plotOutput("map1")), 
-                         tabPanel("TABLE", dataTableOutput("table1"))
+                         tabPanel("Real-time Map", plotOutput("map1")),
+                         tabPanel("Table", dataTableOutput("table1"))
                      )
                  )
                  #mainPanel(plotOutput("map1"), 
                            #dataTableOutput("table1"))
              )
     ),
-# 加上选项不同的case input
-    tabPanel("Coronavirus Timeseries in China",
+    tabPanel("Animated Map",
+             sidebarLayout(
+                 sidebarPanel(
+                     # input case: confirmed, recovered, death
+                     fluidRow(
+                         selectInput("case2", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), 
+                                     selectize=FALSE)
+                     ),
+                 ),
+                 mainPanel(plotOutput("animatedmap"))
+             )
+             ),
+######## 加上选项不同的case input
+    tabPanel("Timeseries Data",
             # sidebarLayout(
                 # sidebarPanel(
                  # input date from 2020-01-01 to current date
@@ -217,7 +231,12 @@ ui <- navbarPage("Global Coronavirus Outbreak",
                      )
                  )
              )
+             ),
+
+    tabPanel("Impact on Economy",
+             mainPanel(plotOutput("lineplot2"))
              )
+)
 )
 
 # Define server logic required to draw a histogram
@@ -247,6 +266,23 @@ server <- function(input, output) {
             right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) #%>% # join map and virus data
         #select(w_geo, 1, 2, 7, 8, 9)
         # how to delete geometry
+    })
+ #############plot不出来   
+    output$animatedmap <- renderPlot({
+        (p <- ncov_tbl %>%  
+             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+             filter(Case == input$case2) %>%
+             right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>%
+             ggplot() + 
+             geom_sf(mapping = aes(fill = Count, geometry = geometry)) + 
+             scale_fill_gradientn(colours = wes_palette("Zissou1", 100, type = "continuous"),
+                                  trans = "log10") + 
+             theme_bw() +
+             labs(title = str_c(input$case2, " cases")))
+        (anim <- p + 
+                transition_time(Date) + 
+                labs(title = str_c(input$case2, " cases"), subtitle = "Date: {frame_time}"))
+        animate(anim, renderer = gifski_renderer())
     })
     
     output$lineplot1 <- renderPlot({
@@ -281,6 +317,20 @@ server <- function(input, output) {
     
     output$animization2 <- renderPlot({
         
+    })
+    
+    output$lineplot2 <- renderPlot({
+        stock <- getSymbols("^HSI", # S&P 500 (^GSPC), Dow Jones (^DJI), NASDAQ (^IXIC), Russell 2000 (^RUT), FTSE 100 (^FTSE), Nikkei 225 (^N225), HANG SENG INDEX (^HSI)
+                            src = "yahoo", 
+                            auto.assign = FALSE, 
+                            from = min(ncov_tbl$Date),
+                            to = max(ncov_tbl$Date)) %>% 
+            as_tibble(rownames = "Date") %>%
+            mutate(Date = date(Date)) %>%
+            ggplot() + 
+            geom_line(mapping = aes(x = Date, y = HSI.Adjusted)) +
+            theme_bw()
+        stock
     })
 }
 
