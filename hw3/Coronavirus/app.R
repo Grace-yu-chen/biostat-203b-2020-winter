@@ -1,13 +1,6 @@
 # author: YU CHEN
 # UID: 305266880
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# It's a Shiny app that visualizes the progression of the 2019-20 Global Coronavirus Outbreak.
 
 library(shiny)
 library(readr)
@@ -152,20 +145,19 @@ chn_prov <- chn_map %>%
 # Define UI for application that draws a histogram
 ui <- navbarPage(theme = shinytheme("flatly"),
                  "Coronavirus Visualization App",
-                 
-    # Application title
-#    titlePanel("Global Coronavirus Outbreak"),
-navbarMenu("China",
+######### working on the layout                 
+# navbarMenu("China",
     tabPanel("Coronavirus Outbreak",
              sidebarLayout(
                  sidebarPanel(
+                     fluidRow(
                      # input date from 2020-01-01 to current date
                      dateInput('date',
                                label = "Choose a Date",
                                min = "2020-01-01", max = Sys.Date(),
                      ),
                      # input case: confirmed, recovered, death
-                     fluidRow(
+                     
                          selectInput("case1", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), 
                                      selectize=FALSE)
                      ),
@@ -186,8 +178,12 @@ navbarMenu("China",
                  sidebarPanel(
                      # input case: confirmed, recovered, death
                      fluidRow(
+                         uiOutput("slider"),
                          selectInput("case2", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), 
-                                     selectize=FALSE)
+                                     selectize=FALSE)# ,
+                         # sliderInput('date3',
+                         #             label = "Date",
+                         #             min = "2020-01-22", max = Sys.Date())
                      ),
                  ),
                  mainPanel(plotOutput("animatedmap"))
@@ -238,7 +234,7 @@ navbarMenu("China",
     tabPanel("Impact on Economy",
              mainPanel(plotOutput("lineplot2"))
              )
-)
+# )
 )
 
 # Define server logic required to draw a histogram
@@ -260,7 +256,6 @@ server <- function(input, output) {
     })
     
     output$table1 <- DT::renderDataTable({
-        #tmp <- select(chn_prov, -geometry)
         ncov_tbl %>%
             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
             filter(Date == input$date, Case == input$case1) %>%
@@ -268,27 +263,45 @@ server <- function(input, output) {
             top_n(1, Date) %>%
             right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>% # join map and virus data
             select(1,2,7,8,9)
-            #select(tmp, -geometry)
-        ######## how to delete geometry
+            # debug note: add DT:: when dealing with table
     })
  #############plot不出来   
-    output$animatedmap <- renderPlot({
-        (p <- ncov_tbl %>%
-             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
-             filter(Case == input$case2) %>%
-             right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>%
-             ggplot() +
-             geom_sf(mapping = aes(fill = Count, geometry = geometry)) +
-             scale_fill_gradientn(colours = wes_palette("Zissou1", 100, type = "continuous"),
-                                  trans = "log10") +
-             theme_bw() +
-             labs(title = str_c(input$case2, " cases")))
-        (anim <- p +
-                transition_time(Date) +
-                labs(title = str_c(input$case2, " cases"), subtitle = "Date: {frame_time}"))
-        animate(anim, renderer = gifski_renderer())
+    # output$animatedmap <- renderPlot({
+    #     (p <- ncov_tbl %>%
+    #          filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+    #          filter(Case == input$case2) %>%
+    #          right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>%
+    #          ggplot() +
+    #          geom_sf(mapping = aes(fill = Count, geometry = geometry)) +
+    #          scale_fill_gradientn(colours = wes_palette("Zissou1", 100, type = "continuous"),
+    #                               trans = "log10") +
+    #          theme_bw() +
+    #          labs(title = str_c(input$case2, " cases")))
+    #     (anim <- p +
+    #             transition_time(Date) +
+    #             labs(title = str_c(input$case2, " cases"), subtitle = "Date: {frame_time}"))
+    #     animate(anim, renderer = gifski_renderer())
+    # })
+    output$slider <- renderUI({
+        sliderInput("date3","Time",min = min(ncov_tbl$Date), max = max(ncov_tbl$Date), value = min(ncov_tbl$Date),
+                    step = 1, timezone = "+0000", animate = T)
     })
-
+    
+    output$animatedmap <- renderPlot({
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+            filter(Date == input$date3, Case == input$case2) %>%
+            group_by(`Province/State`) %>%  
+            top_n(1, Date) %>% # take the latest count on that date
+            right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>%
+            ggplot() +
+            geom_sf(mapping = aes(fill = Count, geometry = geometry)) +
+            scale_fill_gradientn(colors = wes_palette("Zissou1", 100, type = "continuous"),
+                                 trans = "log10") +
+            theme_bw() +
+            labs(title = str_c(input$case2, " cases"), subtitle = input$date)
+    })
+    
     output$lineplot1 <- renderPlot({
         ncov_tbl %>%
             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
