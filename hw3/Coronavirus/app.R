@@ -19,6 +19,7 @@ library(wesanderson)
 library(gganimate)
 library(transformr)
 library(quantmod)
+library(shinythemes)
 
 # no authentication
 sheets_deauth()
@@ -149,8 +150,9 @@ chn_prov <- chn_map %>%
     mutate(NAME_ENG = translate(NAME)) # translate function is vectorized
 
 # Define UI for application that draws a histogram
-ui <- navbarPage("Coronavirus Visualization App",
-
+ui <- navbarPage(theme = shinytheme("flatly"),
+                 "Coronavirus Visualization App",
+                 
     # Application title
 #    titlePanel("Global Coronavirus Outbreak"),
 navbarMenu("China",
@@ -263,9 +265,9 @@ server <- function(input, output) {
             filter(Date == input$date, Case == input$case1) %>%
             group_by(`Province/State`) %>%  
             top_n(1, Date) %>%
-            right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) #%>% # join map and virus data
-        #select(w_geo, 1, 2, 7, 8, 9)
-        # how to delete geometry
+            right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>% # join map and virus data
+        select(-geometry)
+        ######## how to delete geometry
     })
  #############plot不出来   
     output$animatedmap <- renderPlot({
