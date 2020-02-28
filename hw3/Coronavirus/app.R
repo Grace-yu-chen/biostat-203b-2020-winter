@@ -13,7 +13,7 @@ library(gganimate)
 library(transformr)
 library(quantmod)
 library(shinythemes)
-
+library(lubridate)
 # no authentication
 sheets_deauth()
 
@@ -154,13 +154,13 @@ ui <- navbarPage(theme = shinytheme("flatly"),
                      # input date from 2020-01-01 to current date
                      dateInput('date',
                                label = "Choose a Date",
-                               min = "2020-01-01", max = Sys.Date(),
+                               min = "2020-01-01", max = Sys.Date()
                      ),
                      # input case: confirmed, recovered, death
                      
                          selectInput("case1", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), 
                                      selectize=FALSE)
-                     ),
+                     )
                  ),
                  # mainpanel
                  mainPanel(
@@ -181,45 +181,44 @@ ui <- navbarPage(theme = shinytheme("flatly"),
                          uiOutput("slider"),
                          selectInput("case2", "Cases: ", c(Choose = '', "confirmed", "recovered", "death"), 
                                      selectize=FALSE)# ,
-                         # sliderInput('date3',
-                         #             label = "Date",
-                         #             min = "2020-01-22", max = Sys.Date())
-                     ),
+                     )
                  ),
                  mainPanel(plotOutput("animatedmap"))
              )
              ),
-######## 加上选项不同的case input
+
     tabPanel("Timeseries Data",
-            # sidebarLayout(
-                # sidebarPanel(
-                 # input date from 2020-01-01 to current date
-                    # dateInput('date',
-                    #         label = "Choose a Date",
-                    #         min = "2020-01-01", max = Sys.Date(),
-                    # ),
-                    # fluidRow(
-                    #     checkboxGroupInput("case2", label = "Cases: ", choices = c("confirmed" ="confirmed", "recovered" = "recovered", "death" = "death"), 
-                    #                 selected = NULL)
-                    # ),
-                # ),
+            sidebarLayout(
+                sidebarPanel(
+                    fluidRow(
+                        h3("Today is ", Sys.Date()),
+                        uiOutput("slider2")
+                        # try to put seperate case input in one figure. but doesn't work
+                        # checkboxGroupInput("checkbox_case1", label = "Cases: ", choices = c("confirmed" ="confirmed", "recovered" = "recovered", "death" = "death"), 
+                        #             selected = NULL)
+                    )
+                ),
                 # mainpanel
                 mainPanel(
                     tabsetPanel(
                         tabPanel("Real-time Data", plotOutput("lineplot1")), 
-                        tabPanel("Animization", dataTableOutput("animization1"))
+                        tabPanel("Animizated Data", dataTableOutput("animization1"))
                     )
                 )
+    )
     ),
     
     tabPanel("Spatial Data",
              sidebarLayout(
                  sidebarPanel(
+                     fluidRow(
+                     uiOutput("slider3"),
                      # input date from 2020-01-01 to current date
                      dateInput('date2',
                                label = "Choose a Date",
-                               min = "2020-01-01", max = Sys.Date(),
-                     ),
+                               min = "2020-01-01", max = Sys.Date()
+                     )
+                     )
                  ),
                  # mainpanel
                  mainPanel(
@@ -232,10 +231,14 @@ ui <- navbarPage(theme = shinytheme("flatly"),
              ),
 
     tabPanel("Impact on Economy",
+             h1("How Does Coronavirus Hit China's Economy?"),
+             h1(),
+             h2("Reflected in the stock market"),
+             h1(),
              mainPanel(plotOutput("lineplot2"))
              )
-# )
 )
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -265,7 +268,7 @@ server <- function(input, output) {
             select(1,2,7,8,9)
             # debug note: add DT:: when dealing with table
     })
- #############plot不出来   
+    ## try to use original code and show a gif. but doesn't work.  
     # output$animatedmap <- renderPlot({
     #     (p <- ncov_tbl %>%
     #          filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
@@ -283,8 +286,8 @@ server <- function(input, output) {
     #     animate(anim, renderer = gifski_renderer())
     # })
     output$slider <- renderUI({
-        sliderInput("date3","Time",min = min(ncov_tbl$Date), max = max(ncov_tbl$Date), value = min(ncov_tbl$Date),
-                    step = 1, timezone = "+0000", animate = T)
+        sliderInput("date3","Time",min = min(ncov_tbl$Date), max = max(ncov_tbl$Date), 
+                    value = min(ncov_tbl$Date), step = 1, timezone = "+0000", animate = T)
     })
     
     output$animatedmap <- renderPlot({
@@ -302,12 +305,28 @@ server <- function(input, output) {
             labs(title = str_c(input$case2, " cases"), subtitle = input$date)
     })
     
+    output$slider2 <- renderUI({
+        sliderInput("date4","Time",min = min(ncov_tbl$Date), max = max(ncov_tbl$Date), 
+                    value = min(ncov_tbl$Date), step = 1, timezone = "+0000", animate = T)
+    })
+    
     output$lineplot1 <- renderPlot({
+        # ncov_tbl %>%
+        #     filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+        #     group_by(Date, Case) %>%  
+        #     summarise(total_count = sum(Count)) %>%
+        #     filter(Case == input$checkbox_case1) %>%
+        #     ggplot() +
+        #     geom_line(mapping = aes(x = Date, y = total_count, color = Case), size = 2) + 
+        #     # scale_color_manual(values = c("blue", "black", "green")) + 
+        #     scale_color_manual(values = (if(input$checkbox_case1 == "confirmed") "blue" else if(input$checkbox_case1 == "recovered") "green" else "black")) + 
+        #     scale_y_log10() + 
+        #     labs(y = "Count") + 
+        #     theme_bw()
         ncov_tbl %>%
             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
             group_by(Date, Case) %>%  
             summarise(total_count = sum(Count)) %>%
-            # print()
             ggplot() +
             geom_line(mapping = aes(x = Date, y = total_count, color = Case), size = 2) + 
             scale_color_manual(values = c("blue", "black", "green")) + 
@@ -315,9 +334,19 @@ server <- function(input, output) {
             labs(y = "Count") + 
             theme_bw()
     })
-    
+   ####????? 
     output$animization1 <- renderPlot({
-        
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+            group_by(Date, Case) %>%  
+            summarise(total_count = sum(Count)) %>%
+            filter(Date <= input$date4) %>%
+            ggplot() +
+            geom_line(mapping = aes(x = Date, y = total_count, color = Case), size = 2) + 
+            scale_color_manual(values = c("blue", "black", "green")) + 
+            scale_y_log10() + 
+            labs(y = "Count") + 
+            theme_bw()
     })
     
     output$barplot1 <- renderPlot({
@@ -332,8 +361,21 @@ server <- function(input, output) {
             theme(axis.text.x = element_text(angle = 90))
     })
     
+    output$slider3 <- renderUI({
+        sliderInput("date5","Time",min = min(ncov_tbl$Date), max = max(ncov_tbl$Date), 
+                    value = min(ncov_tbl$Date), step = 1, timezone = "+0000", animate = T)
+    })
+    
     output$animization2 <- renderPlot({
-        
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan"), 
+                   `Date` == input$date5) %>%
+            group_by(`Province/State`) %>%
+            ggplot() +
+            geom_col(mapping = aes(x = `Province/State`, y = `Count`, fill = `Case`)) + 
+            scale_y_log10() +
+            labs(title = input$date5) + 
+            theme(axis.text.x = element_text(angle = 90))
     })
     
     output$lineplot2 <- renderPlot({
