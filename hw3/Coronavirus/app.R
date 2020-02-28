@@ -16,6 +16,8 @@ library(dplyr)
 library(tidyverse)
 library(googlesheets4)
 library(wesanderson)
+library(gganimate)
+library(transformr)
 
 # no authentication
 sheets_deauth()
@@ -143,15 +145,14 @@ translate <- function(x) {
 # add english name
 chn_prov <- chn_map %>% 
     count(NAME) %>%
-    mutate(NAME_ENG = translate(NAME))
+    mutate(NAME_ENG = translate(NAME)) # translate function is vectorized
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
+ui <- navbarPage("Global Coronavirus Outbreak",
 
     # Application title
-    titlePanel("Global Coronavirus Outbreak"),
-    # tab title
-    tabPanel("Real-time Map",
+#    titlePanel("Global Coronavirus Outbreak"),
+    tabPanel("Real-time Coronavirus Map in China",
              sidebarLayout(
                  sidebarPanel(
                      # input date from 2020-01-01 to current date
@@ -166,10 +167,57 @@ ui <- fluidPage(
                      ),
                  ),
                  # mainpanel
-                 mainPanel(plotOutput("map1"), 
-                           dataTableOutput("table1"))
+                 mainPanel(
+                     tabsetPanel(
+                         tabPanel("MAP", plotOutput("map1")), 
+                         tabPanel("TABLE", dataTableOutput("table1"))
+                     )
+                 )
+                 #mainPanel(plotOutput("map1"), 
+                           #dataTableOutput("table1"))
              )
-             ) 
+    ),
+# 加上选项不同的case input
+    tabPanel("Coronavirus Timeseries in China",
+            # sidebarLayout(
+                # sidebarPanel(
+                 # input date from 2020-01-01 to current date
+                    # dateInput('date',
+                    #         label = "Choose a Date",
+                    #         min = "2020-01-01", max = Sys.Date(),
+                    # ),
+                    # fluidRow(
+                    #     checkboxGroupInput("case2", label = "Cases: ", choices = c("confirmed" ="confirmed", "recovered" = "recovered", "death" = "death"), 
+                    #                 selected = NULL)
+                    # ),
+                # ),
+                # mainpanel
+                mainPanel(
+                    tabsetPanel(
+                        tabPanel("Real-time Data", plotOutput("lineplot1")), 
+                        tabPanel("Animization", dataTableOutput("animization1"))
+                    )
+                )
+    ),
+    
+    tabPanel("Spatial Data",
+             sidebarLayout(
+                 sidebarPanel(
+                     # input date from 2020-01-01 to current date
+                     dateInput('date2',
+                               label = "Choose a Date",
+                               min = "2020-01-01", max = Sys.Date(),
+                     ),
+                 ),
+                 # mainpanel
+                 mainPanel(
+                     tabsetPanel(
+                         tabPanel("On Chosen Date", plotOutput("barplot1")), 
+                         tabPanel("Animization", dataTableOutput("animization2"))
+                     )
+                 )
+             )
+             )
 )
 
 # Define server logic required to draw a histogram
@@ -196,7 +244,43 @@ server <- function(input, output) {
             filter(Date == input$date, Case == input$case1) %>%
             group_by(`Province/State`) %>%  
             top_n(1, Date) %>%
-            right_join(select(chn_prov,-geometry), by = c("Province/State" = "NAME_ENG")) 
+            right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) #%>% # join map and virus data
+        #select(w_geo, 1, 2, 7, 8, 9)
+        # how to delete geometry
+    })
+    
+    output$lineplot1 <- renderPlot({
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
+            group_by(Date, Case) %>%  
+            summarise(total_count = sum(Count)) %>%
+            # print()
+            ggplot() +
+            geom_line(mapping = aes(x = Date, y = total_count, color = Case), size = 2) + 
+            scale_color_manual(values = c("blue", "black", "green")) + 
+            scale_y_log10() + 
+            labs(y = "Count") + 
+            theme_bw()
+    })
+    
+    output$animization1 <- renderPlot({
+        
+    })
+    
+    output$barplot1 <- renderPlot({
+        ncov_tbl %>%
+            filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan"), 
+                   `Date` == input$date2) %>%
+            group_by(`Province/State`) %>%
+            ggplot() +
+            geom_col(mapping = aes(x = `Province/State`, y = `Count`, fill = `Case`)) + 
+            scale_y_log10() +
+            labs(title = input$date2) + 
+            theme(axis.text.x = element_text(angle = 90))
+    })
+    
+    output$animization2 <- renderPlot({
+        
     })
 }
 
