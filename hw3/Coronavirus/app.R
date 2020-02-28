@@ -174,7 +174,7 @@ navbarMenu("China",
                  mainPanel(
                      tabsetPanel(
                          tabPanel("Real-time Map", plotOutput("map1")),
-                         tabPanel("Table", dataTableOutput("table1"))
+                         tabPanel("Table", DT::dataTableOutput("table1"))
                      )
                  )
                  #mainPanel(plotOutput("map1"), 
@@ -259,34 +259,36 @@ server <- function(input, output) {
             labs(title = str_c(input$case1, " cases"), subtitle = input$date)
     })
     
-    output$table1 <- renderDataTable({
+    output$table1 <- DT::renderDataTable({
+        #tmp <- select(chn_prov, -geometry)
         ncov_tbl %>%
             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
             filter(Date == input$date, Case == input$case1) %>%
             group_by(`Province/State`) %>%  
             top_n(1, Date) %>%
             right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>% # join map and virus data
-        select(-geometry)
+            select(1,2,7,8,9)
+            #select(tmp, -geometry)
         ######## how to delete geometry
     })
  #############plot不出来   
     output$animatedmap <- renderPlot({
-        (p <- ncov_tbl %>%  
+        (p <- ncov_tbl %>%
              filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
              filter(Case == input$case2) %>%
              right_join(chn_prov, by = c("Province/State" = "NAME_ENG")) %>%
-             ggplot() + 
-             geom_sf(mapping = aes(fill = Count, geometry = geometry)) + 
+             ggplot() +
+             geom_sf(mapping = aes(fill = Count, geometry = geometry)) +
              scale_fill_gradientn(colours = wes_palette("Zissou1", 100, type = "continuous"),
-                                  trans = "log10") + 
+                                  trans = "log10") +
              theme_bw() +
              labs(title = str_c(input$case2, " cases")))
-        (anim <- p + 
-                transition_time(Date) + 
+        (anim <- p +
+                transition_time(Date) +
                 labs(title = str_c(input$case2, " cases"), subtitle = "Date: {frame_time}"))
         animate(anim, renderer = gifski_renderer())
     })
-    
+
     output$lineplot1 <- renderPlot({
         ncov_tbl %>%
             filter(`Country/Region` %in% c("Mainland China", "Macau", "Hong Kong", "Taiwan")) %>%
