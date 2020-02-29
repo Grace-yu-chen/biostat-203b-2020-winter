@@ -3,9 +3,9 @@
 # It's a Shiny app that visualizes the progression of the 2019-20 Global Coronavirus Outbreak.
 
 library(shiny)
-library(readr)
-library(ggplot2)
-library(dplyr)
+# library(readr)
+# library(ggplot2)
+# library(dplyr)
 library(tidyverse)
 library(googlesheets4)
 library(wesanderson)
@@ -14,6 +14,7 @@ library(transformr)
 library(quantmod)
 library(shinythemes)
 library(lubridate)
+
 #no authentication
 sheets_deauth()
 
