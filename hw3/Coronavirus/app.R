@@ -3,9 +3,9 @@
 # It's a Shiny app that visualizes the progression of the 2019-20 Global Coronavirus Outbreak.
 
 library(shiny)
-# library(readr)
-# library(ggplot2)
-# library(dplyr)
+library(readr)
+library(ggplot2)
+library(dplyr)
 library(tidyverse)
 library(googlesheets4)
 library(wesanderson)
@@ -54,7 +54,7 @@ ncov_tbl <- confirmed_long %>%
 
 # map of China using GIS data
 library(sf)
-chn_map <- st_read("/home/chenyu1997/203b/hw3/china-province-border-data/bou2_4p.shp", as_tibble = TRUE) %>%
+chn_map <- st_read("./bou2_4p.shp", as_tibble = TRUE) %>%
     mutate(NAME = iconv(NAME, from = "GBK"),
            BOU2_4M_ = as.integer(BOU2_4M_),
            BOU2_4M_ID = as.integer(BOU2_4M_ID)) %>%
