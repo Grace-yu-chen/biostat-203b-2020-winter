@@ -14,7 +14,7 @@ library(transformr)
 library(quantmod)
 library(shinythemes)
 library(lubridate)
-# no authentication
+#no authentication
 sheets_deauth()
 
 # import data before Feb. 11
@@ -53,7 +53,7 @@ ncov_tbl <- confirmed_long %>%
 
 # map of China using GIS data
 library(sf)
-chn_map <- st_read("/home/chenyu1997/203b/hw3/Coronavirus/china-province-border-data/bou2_4p.shp", as_tibble = TRUE) %>%
+chn_map <- st_read("/home/chenyu1997/203b/hw3/china-province-border-data/bou2_4p.shp", as_tibble = TRUE) %>%
     mutate(NAME = iconv(NAME, from = "GBK"),
            BOU2_4M_ = as.integer(BOU2_4M_),
            BOU2_4M_ID = as.integer(BOU2_4M_ID)) %>%
