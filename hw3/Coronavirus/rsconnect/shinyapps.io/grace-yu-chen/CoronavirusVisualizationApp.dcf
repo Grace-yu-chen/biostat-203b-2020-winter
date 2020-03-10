@@ -1,0 +1,12 @@
+name: CoronavirusVisualizationApp
+title: CoronavirusVisualizationApp
+username:
+account: grace-yu-chen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1881346
+bundleId: 2838836
+url: https://grace-yu-chen.shinyapps.io/CoronavirusVisualizationApp/
+when: 1582939240.10869
+asMultiple: FALSE
+asStatic: FALSE
