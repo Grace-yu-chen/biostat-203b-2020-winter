@@ -1,0 +1,44 @@
+---
+title: "Biostat 203B Homework 4"
+subtitle: Due Mar 20 @ 11:59PM
+author: Yu Chen 305266880
+output:
+  # ioslides_presentation: default
+  html_document:
+    toc: true
+    toc_depth: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+# Data Preparation
+Load database libraries and the tidyverse frontend:
+```{r}
+library(DBI)
+library(RPostgreSQL)
+library(tidyverse)
+library(lubridate)
+```
+Credentials for using PostgreSQL database. We are going to use username `postgres` with password `postgres` to access the `mimic` database in the schemee `mimiciii`. 
+```{r}
+# Load configuration settings
+dbdriver <- 'PostgreSQL'
+#host  <- '127.0.0.1'
+#port  <- '5432'
+user  <- 'postgres'
+password <- 'postgres'
+dbname <- 'mimic'
+schema <- 'mimiciii'
+# Connect to the database using the configuration settings
+con <- dbConnect(RPostgreSQL::PostgreSQL(), 
+                 dbname = dbname, 
+                 #host = host, 
+                 #port = port, 
+                 user = user, 
+                 password = password)
+# Set the default schema
+dbExecute(con, paste("SET search_path TO ", schema, sep=" "))
+```
