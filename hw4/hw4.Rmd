@@ -1,5 +1,5 @@
 ---
-title: "Biostat 203B Homework 4"
+title: "30-Day Mortality Rate of Fever Patients Admitted to All Seven Care Units"
 subtitle: Due Mar 20 @ 11:59PM
 author: Yu Chen 305266880
 output:
@@ -14,7 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Introduction
+
 # Data Preparation
+
 Load database libraries and the tidyverse frontend:
 ```{r}
 library(DBI)
@@ -22,6 +24,7 @@ library(RPostgreSQL)
 library(tidyverse)
 library(lubridate)
 ```
+
 Credentials for using PostgreSQL database. We are going to use username `postgres` with password `postgres` to access the `mimic` database in the schemee `mimiciii`. 
 ```{r}
 # Load configuration settings
@@ -41,4 +44,150 @@ con <- dbConnect(RPostgreSQL::PostgreSQL(),
                  password = password)
 # Set the default schema
 dbExecute(con, paste("SET search_path TO ", schema, sep=" "))
+con
 ```
+
+In this section, we demo how to create a cohort of patients admitted into CCU, CSRU, MICU, NICU, NWARD, SICU and TSICU and were diagnosed with heart attack.
+```{r}
+tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit))
+```
+
+First we create (query) tables of patients who were directly admitted into CCU, CSRU, MICU, NICU, NWARD, SICU and TSICU.
+```{r}
+ccu_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "CCU") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+csru_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "CSRU") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+micu_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "MICU") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+nicu_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "NICU") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+nward_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "NWARD") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+sicu_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "SICU") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+tsicu_admissions <- tbl(con, "transfers") %>%
+  select(subject_id, hadm_id, prev_careunit, curr_careunit) %>%
+  filter(is.na(prev_careunit) & curr_careunit == "TSICU") %>%
+  select(subject_id, hadm_id) %>%
+  distinct()
+```
+
+Now we want to restrict to fever patients. To find all possible ICD-9 codes related to heart attack, we search for string `fever` in the `long_title` of table `d_icd_diagnoses`:
+```{r}
+mi_codes <- tbl(con, "d_icd_diagnoses") %>%
+  filter(str_detect(tolower(long_title), "fever")) 
+```
+
+`diagnoses_icd` table stores the diagnosis of each admission. We use `semi_join()` to keep the rows in `diagnoses_icd` that match the ICD-9 codes related to fever:
+```{r}
+mi_admissions <- tbl(con, "diagnoses_icd") %>%
+  semi_join(mi_codes, by = "icd9_code")
+```
+
+MI may not be listed as the principal diagnosis; as explained in [the documentation for the `patients` table](https://mimic.physionet.org/mimictables/diagnoses_icd/), the `seq_num` field is a priority ranking for the diagnoses generated at the end of stay. In order to focus on patients for whom MI was central to their hospitalization, we will include records with MI in any of the first five diagnosis positions, according to the `seq_num` field. To avoid duplicate admissions, we use `group_by()` and `top_n()` to limit the query to the first MI diagnosis for each admission.
+```{r}
+mi_admissions <- mi_admissions %>%
+  filter(seq_num <= 5) %>%
+  group_by(subject_id, hadm_id) %>%
+  filter(min_rank(seq_num) <= 1) %>%
+  ungroup() %>%
+  select(subject_id, hadm_id, icd9_code, seq_num)
+```
+
+Now we `inner_join` the table of admissions to all the ubit cares and the table of admissions that include MI diagnosis.
+```{r}
+study_admissions_ccu <- ccu_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+study_admissions_csru <- csru_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+study_admissions_micu <- micu_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+study_admissions_nicu <- nicu_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+study_admissions_nward <- nward_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+study_admissions_sicu <- sicu_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+study_admissions_tsicu <- tsicu_admissions %>%
+  inner_join(mi_admissions, by = c("subject_id", "hadm_id"))
+
+```
+We notice that there is no data in table `study_admissions_nicu` and `study_admissions_nward`, which means there are no fever patients addmitted to NICU and NWARD. So we won't consider these two conditions in the following analysis.
+
+Now we create a logical variable indicating the MI is the principal diagonosis or not (according to `seq_num`).
+```{r}
+study_admissions_ccu <- study_admissions_ccu %>%
+  mutate(principal_dx = seq_num == 1) %>%
+  select(-seq_num)
+study_admissions_csru <- study_admissions_csru %>%
+  mutate(principal_dx = seq_num == 1) %>%
+  select(-seq_num)
+study_admissions_micu <- study_admissions_micu %>%
+  mutate(principal_dx = seq_num == 1) %>%
+  select(-seq_num)
+study_admissions_sicu <- study_admissions_sicu %>%
+  mutate(principal_dx = seq_num == 1) %>%
+  select(-seq_num)
+study_admissions_tsicu <- study_admissions_tsicu %>%
+  mutate(principal_dx = seq_num == 1) %>%
+  select(-seq_num)
+```
+
+We want to add information about the severity of patients’ ailments. The `drgcodes` table contains, for `DRG` codes from the All Payers Registry (APR), severity and mortality indicators. We pull the drug severity information and right-join it to our query tables.
+```{r}
+study_admissions_ccu <- tbl(con, "drgcodes") %>%
+  filter(str_detect(drg_type, "APR")) %>%
+  select(subject_id, hadm_id, drg_severity) %>%
+  right_join(study_admissions_ccu, by = c("subject_id", "hadm_id")) %>%
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+study_admissions_csru <- tbl(con, "drgcodes") %>%
+  filter(str_detect(drg_type, "APR")) %>%
+  select(subject_id, hadm_id, drg_severity) %>%
+  right_join(study_admissions_csru, by = c("subject_id", "hadm_id")) %>%
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+study_admissions_micu <- tbl(con, "drgcodes") %>%
+  filter(str_detect(drg_type, "APR")) %>%
+  select(subject_id, hadm_id, drg_severity) %>%
+  right_join(study_admissions_micu, by = c("subject_id", "hadm_id")) %>%
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+study_admissions_sicu <- tbl(con, "drgcodes") %>%
+  filter(str_detect(drg_type, "APR")) %>%
+  select(subject_id, hadm_id, drg_severity) %>%
+  right_join(study_admissions_sicu, by = c("subject_id", "hadm_id")) %>%
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+study_admissions_tsicu <- tbl(con, "drgcodes") %>%
+  filter(str_detect(drg_type, "APR")) %>%
+  select(subject_id, hadm_id, drg_severity) %>%
+  right_join(study_admissions_tsicu, by = c("subject_id", "hadm_id")) %>%
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+```
+
+
+
+
+# Data Visualization
+
+# Analytics
+
+# Conclusions
