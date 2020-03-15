@@ -492,62 +492,820 @@ tsicu_admissions &lt;- tbl(con, &quot;transfers&quot;) %&gt;%
   select(subject_id, hadm_id, icd9_code, seq_num)</code></pre>
 <p>Now we <code>inner_join</code> the table of admissions to all the ubit cares and the table of admissions that include MI diagnosis.</p>
 <pre class="r"><code>study_admissions_ccu &lt;- ccu_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))
-study_admissions_csru &lt;- csru_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))
-study_admissions_micu &lt;- micu_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))
-study_admissions_nicu &lt;- nicu_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))
-study_admissions_nward &lt;- nward_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))
-study_admissions_sicu &lt;- sicu_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))
-study_admissions_tsicu &lt;- tsicu_admissions %&gt;%
-  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;))</code></pre>
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## Warning: `lang_name()` is deprecated as of rlang 0.2.0.
+## Please use `call_name()` instead.
+## This warning is displayed once per session.</code></pre>
+<pre><code>## Warning: `lang()` is deprecated as of rlang 0.2.0.
+## Please use `call2()` instead.
+## This warning is displayed once per session.</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id icd9_code seq_num
+##         &lt;int&gt;   &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1       6891  145953 78060           1
+##  2      51557  168163 78060           3
+##  3      55106  186531 27731           4
+##  4      63866  108244 78060           4
+##  5      65309  178833 78060           5
+##  6      66339  145868 78062           5
+##  7      77826  109289 78062           5
+##  8      84463  189594 78060           5
+##  9      87254  116626 78060           1
+## 10      89956  115406 78062           5
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_csru &lt;- csru_admissions %&gt;%
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id icd9_code seq_num
+##         &lt;int&gt;   &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1      42243  111059 78062           5
+##  2      42451  102698 78062           5
+##  3      44808  140128 78062           5
+##  4      46085  136655 78061           4
+##  5      46715  102616 78062           5
+##  6      49463  126932 78062           3
+##  7      52504  172657 78062           4
+##  8      53244  184401 78062           5
+##  9      54264  111946 78062           3
+## 10      55106  186531 27731           4
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_micu &lt;- micu_admissions %&gt;%
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id icd9_code seq_num
+##         &lt;int&gt;   &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1       6428  164632 78060           1
+##  2      11018  186291 78060           5
+##  3      26395  185242 78061           5
+##  4      28935  151031 78060           5
+##  5      31136  149711 78060           1
+##  6      32161  101665 78060           4
+##  7      40004  121157 78060           4
+##  8      44339  114909 78062           5
+##  9      46480  188502 78060           1
+## 10      48546  170878 78060           5
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_nicu &lt;- nicu_admissions %&gt;%
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]</code></pre>
+<pre class="r"><code>study_admissions_nward &lt;- nward_admissions %&gt;%
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]</code></pre>
+<pre class="r"><code>study_admissions_sicu &lt;- sicu_admissions %&gt;%
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id icd9_code seq_num
+##         &lt;int&gt;   &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1      28423  119557 78060           1
+##  2      30011  183545 78062           2
+##  3      43770  193987 78062           3
+##  4      44449  133796 78060           3
+##  5      44715  132968 78060           5
+##  6      46959  109201 78060           4
+##  7      48056  196072 78060           5
+##  8      51439  139465 78060           4
+##  9      52329  172780 78060           5
+## 10      58740  134969 78062           5
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_tsicu &lt;- tsicu_admissions %&gt;%
+  inner_join(mi_admissions, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
+  print()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 4]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id icd9_code seq_num
+##         &lt;int&gt;   &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1        671  126769 78060           4
+##  2      11421  199366 78062           5
+##  3      30551  113392 78061           4
+##  4      43171  161695 78062           5
+##  5      59845  112573 78062           5
+##  6      60245  188748 78062           3
+##  7      66988  172879 78060           1
+##  8      76332  144413 78060           5
+##  9      81844  127525 78060           3
+## 10      82529  142927 78062           4
+## # … with more rows</code></pre>
 <p>We notice that there is no data in table <code>study_admissions_nicu</code> and <code>study_admissions_nward</code>, which means there are no fever patients addmitted to NICU and NWARD. So we won’t consider these two conditions in the following analysis.</p>
 <p>Now we create a logical variable indicating the MI is the principal diagonosis or not (according to <code>seq_num</code>).</p>
 <pre class="r"><code>study_admissions_ccu &lt;- study_admissions_ccu %&gt;%
   mutate(principal_dx = seq_num == 1) %&gt;%
-  select(-seq_num)
+  select(-seq_num) 
 study_admissions_csru &lt;- study_admissions_csru %&gt;%
   mutate(principal_dx = seq_num == 1) %&gt;%
-  select(-seq_num)
+  select(-seq_num) 
 study_admissions_micu &lt;- study_admissions_micu %&gt;%
   mutate(principal_dx = seq_num == 1) %&gt;%
-  select(-seq_num)
+  select(-seq_num) 
 study_admissions_sicu &lt;- study_admissions_sicu %&gt;%
   mutate(principal_dx = seq_num == 1) %&gt;%
-  select(-seq_num)
+  select(-seq_num) 
 study_admissions_tsicu &lt;- study_admissions_tsicu %&gt;%
   mutate(principal_dx = seq_num == 1) %&gt;%
-  select(-seq_num)</code></pre>
+  select(-seq_num) </code></pre>
 <p>We want to add information about the severity of patients’ ailments. The <code>drgcodes</code> table contains, for <code>DRG</code> codes from the All Payers Registry (APR), severity and mortality indicators. We pull the drug severity information and right-join it to our query tables.</p>
 <pre class="r"><code>study_admissions_ccu &lt;- tbl(con, &quot;drgcodes&quot;) %&gt;%
   filter(str_detect(drg_type, &quot;APR&quot;)) %&gt;%
   select(subject_id, hadm_id, drg_severity) %&gt;%
   right_join(study_admissions_ccu, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
-  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity)) 
 study_admissions_csru &lt;- tbl(con, &quot;drgcodes&quot;) %&gt;%
   filter(str_detect(drg_type, &quot;APR&quot;)) %&gt;%
   select(subject_id, hadm_id, drg_severity) %&gt;%
   right_join(study_admissions_csru, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
-  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity)) 
 study_admissions_micu &lt;- tbl(con, &quot;drgcodes&quot;) %&gt;%
   filter(str_detect(drg_type, &quot;APR&quot;)) %&gt;%
   select(subject_id, hadm_id, drg_severity) %&gt;%
   right_join(study_admissions_micu, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
-  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity)) 
 study_admissions_sicu &lt;- tbl(con, &quot;drgcodes&quot;) %&gt;%
   filter(str_detect(drg_type, &quot;APR&quot;)) %&gt;%
   select(subject_id, hadm_id, drg_severity) %&gt;%
   right_join(study_admissions_sicu, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
-  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity)) 
 study_admissions_tsicu &lt;- tbl(con, &quot;drgcodes&quot;) %&gt;%
   filter(str_detect(drg_type, &quot;APR&quot;)) %&gt;%
   select(subject_id, hadm_id, drg_severity) %&gt;%
   right_join(study_admissions_tsicu, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
-  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity))</code></pre>
+  mutate(drg_severity = ifelse(is.na(drg_severity), 1, drg_severity)) </code></pre>
+<p>Pull the admission time <code>admittime</code>, discharge time <code>dischtime</code>, date of birth <code>dob</code>, and date of death <code>dod</code>. We are interested in the mortaility rate 30 days after discharge. So we only keep patients who didn’t die in hospital.</p>
+<pre class="r"><code>study_admissions_ccu %&gt;%
+  left_join(
+    select(tbl(con, &quot;admissions&quot;),
+           subject_id, hadm_id, admittime, dischtime, hospital_expire_flag
+    ), by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)
+  ) %&gt;%
+  filter(hospital_expire_flag == 0) %&gt;% # patients who did not die in hospital
+  select(-hospital_expire_flag) %&gt;%
+  left_join(
+    select(tbl(con, &quot;patients&quot;), subject_id, dob, dod),
+    by = &quot;subject_id&quot;
+  ) %&gt;%
+  print(width = Inf) -&gt; study_admissions_ccu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id drg_severity icd9_code principal_dx admittime          
+##         &lt;int&gt;   &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;dttm&gt;             
+##  1       6891  145953            1 78060     TRUE         2146-07-08 14:33:00
+##  2       6891  145953            1 78060     TRUE         2146-07-08 14:33:00
+##  3      51557  168163            3 78060     FALSE        2129-06-02 11:00:00
+##  4      51557  168163            3 78060     FALSE        2129-06-02 11:00:00
+##  5      55106  186531            3 27731     FALSE        2154-08-02 19:18:00
+##  6      55106  186531            3 27731     FALSE        2154-08-02 19:18:00
+##  7      63866  108244            3 78060     FALSE        2192-01-08 18:26:00
+##  8      63866  108244            4 78060     FALSE        2192-01-08 18:26:00
+##  9      65309  178833            3 78060     FALSE        2115-10-21 14:00:00
+## 10      65309  178833            3 78060     FALSE        2115-10-21 14:00:00
+##    dischtime           dob                 dod                
+##    &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
+##  1 2146-07-11 14:25:00 2087-09-10 00:00:00 NA                 
+##  2 2146-07-11 14:25:00 2087-09-10 00:00:00 NA                 
+##  3 2129-06-08 17:45:00 2104-05-20 00:00:00 NA                 
+##  4 2129-06-08 17:45:00 2104-05-20 00:00:00 NA                 
+##  5 2154-08-10 13:00:00 2096-12-18 00:00:00 NA                 
+##  6 2154-08-10 13:00:00 2096-12-18 00:00:00 NA                 
+##  7 2192-01-13 16:10:00 2145-09-30 00:00:00 NA                 
+##  8 2192-01-13 16:10:00 2145-09-30 00:00:00 NA                 
+##  9 2115-10-28 16:38:00 2034-09-06 00:00:00 NA                 
+## 10 2115-10-28 16:38:00 2034-09-06 00:00:00 NA                 
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_csru %&gt;%
+  left_join(
+    select(tbl(con, &quot;admissions&quot;),
+           subject_id, hadm_id, admittime, dischtime, hospital_expire_flag
+    ), by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)
+  ) %&gt;%
+  filter(hospital_expire_flag == 0) %&gt;% # patients who did not die in hospital
+  select(-hospital_expire_flag) %&gt;%
+  left_join(
+    select(tbl(con, &quot;patients&quot;), subject_id, dob, dod),
+    by = &quot;subject_id&quot;
+  ) %&gt;%
+  print(width = Inf) -&gt; study_admissions_csru</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id drg_severity icd9_code principal_dx admittime          
+##         &lt;int&gt;   &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;dttm&gt;             
+##  1      42243  111059            2 78062     FALSE        2157-05-05 09:45:00
+##  2      42243  111059            2 78062     FALSE        2157-05-05 09:45:00
+##  3      42451  102698            2 78062     FALSE        2152-10-18 16:37:00
+##  4      42451  102698            2 78062     FALSE        2152-10-18 16:37:00
+##  5      44808  140128            2 78062     FALSE        2138-07-09 21:14:00
+##  6      44808  140128            2 78062     FALSE        2138-07-09 21:14:00
+##  7      46085  136655            2 78061     FALSE        2142-11-21 08:00:00
+##  8      46085  136655            2 78061     FALSE        2142-11-21 08:00:00
+##  9      46715  102616            1 78062     FALSE        2143-03-19 10:45:00
+## 10      46715  102616            1 78062     FALSE        2143-03-19 10:45:00
+##    dischtime           dob                 dod                
+##    &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
+##  1 2157-05-09 13:57:00 2092-08-26 00:00:00 NA                 
+##  2 2157-05-09 13:57:00 2092-08-26 00:00:00 NA                 
+##  3 2152-10-23 11:14:00 2104-10-21 00:00:00 NA                 
+##  4 2152-10-23 11:14:00 2104-10-21 00:00:00 NA                 
+##  5 2138-07-17 19:00:00 2093-02-12 00:00:00 NA                 
+##  6 2138-07-17 19:00:00 2093-02-12 00:00:00 NA                 
+##  7 2142-11-27 15:18:00 2077-01-14 00:00:00 NA                 
+##  8 2142-11-27 15:18:00 2077-01-14 00:00:00 NA                 
+##  9 2143-03-28 17:52:00 2099-02-23 00:00:00 NA                 
+## 10 2143-03-28 17:52:00 2099-02-23 00:00:00 NA                 
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_micu %&gt;%
+  left_join(
+    select(tbl(con, &quot;admissions&quot;),
+           subject_id, hadm_id, admittime, dischtime, hospital_expire_flag
+    ), by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)
+  ) %&gt;%
+  filter(hospital_expire_flag == 0) %&gt;% # patients who did not die in hospital
+  select(-hospital_expire_flag) %&gt;%
+  left_join(
+    select(tbl(con, &quot;patients&quot;), subject_id, dob, dod),
+    by = &quot;subject_id&quot;
+  ) %&gt;%
+  print(width = Inf) -&gt; study_admissions_micu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id drg_severity icd9_code principal_dx admittime          
+##         &lt;int&gt;   &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;dttm&gt;             
+##  1       6428  164632            3 78060     TRUE         2119-07-22 08:31:00
+##  2       6428  164632            3 78060     TRUE         2119-07-22 08:31:00
+##  3      11018  186291            3 78060     FALSE        2151-09-21 22:18:00
+##  4      11018  186291            3 78060     FALSE        2151-09-21 22:18:00
+##  5      26395  185242            3 78061     FALSE        2192-06-28 00:12:00
+##  6      26395  185242            3 78061     FALSE        2192-06-28 00:12:00
+##  7      28935  151031            2 78060     FALSE        2198-08-13 15:12:00
+##  8      28935  151031            2 78060     FALSE        2198-08-13 15:12:00
+##  9      31136  149711            3 78060     TRUE         2132-07-27 20:11:00
+## 10      31136  149711            3 78060     TRUE         2132-07-27 20:11:00
+##    dischtime           dob                 dod                
+##    &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
+##  1 2119-07-27 14:11:00 2095-05-06 00:00:00 NA                 
+##  2 2119-07-27 14:11:00 2095-05-06 00:00:00 NA                 
+##  3 2151-09-24 16:15:00 2084-12-30 00:00:00 2154-04-24 00:00:00
+##  4 2151-09-24 16:15:00 2084-12-30 00:00:00 2154-04-24 00:00:00
+##  5 2192-07-07 15:20:00 1885-09-22 00:00:00 2194-05-09 00:00:00
+##  6 2192-07-07 15:20:00 1885-09-22 00:00:00 2194-05-09 00:00:00
+##  7 2198-08-17 17:10:00 2154-04-10 00:00:00 NA                 
+##  8 2198-08-17 17:10:00 2154-04-10 00:00:00 NA                 
+##  9 2132-08-01 19:10:00 2065-10-16 00:00:00 2133-09-24 00:00:00
+## 10 2132-08-01 19:10:00 2065-10-16 00:00:00 2133-09-24 00:00:00
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_sicu %&gt;%
+  left_join(
+    select(tbl(con, &quot;admissions&quot;),
+           subject_id, hadm_id, admittime, dischtime, hospital_expire_flag
+    ), by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)
+  ) %&gt;%
+  filter(hospital_expire_flag == 0) %&gt;% # patients who did not die in hospital
+  select(-hospital_expire_flag) %&gt;%
+  left_join(
+    select(tbl(con, &quot;patients&quot;), subject_id, dob, dod),
+    by = &quot;subject_id&quot;
+  ) %&gt;%
+  print(width = Inf) -&gt; study_admissions_sicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id drg_severity icd9_code principal_dx admittime          
+##         &lt;int&gt;   &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;dttm&gt;             
+##  1      28423  119557            3 78060     TRUE         2107-02-02 19:09:00
+##  2      28423  119557            3 78060     TRUE         2107-02-02 19:09:00
+##  3      30011  183545            1 78062     FALSE        2160-06-25 11:30:00
+##  4      30011  183545            1 78062     FALSE        2160-06-25 11:30:00
+##  5      43770  193987            1 78062     FALSE        2200-04-10 07:15:00
+##  6      43770  193987            1 78062     FALSE        2200-04-10 07:15:00
+##  7      44449  133796            3 78060     FALSE        2103-08-02 10:50:00
+##  8      44449  133796            3 78060     FALSE        2103-08-02 10:50:00
+##  9      44715  132968            2 78060     FALSE        2124-05-08 18:39:00
+## 10      44715  132968            2 78060     FALSE        2124-05-08 18:39:00
+##    dischtime           dob                 dod                
+##    &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
+##  1 2107-02-11 14:20:00 2054-12-05 00:00:00 NA                 
+##  2 2107-02-11 14:20:00 2054-12-05 00:00:00 NA                 
+##  3 2160-06-28 17:25:00 2090-04-13 00:00:00 NA                 
+##  4 2160-06-28 17:25:00 2090-04-13 00:00:00 NA                 
+##  5 2200-04-17 12:00:00 2135-07-29 00:00:00 NA                 
+##  6 2200-04-17 12:00:00 2135-07-29 00:00:00 NA                 
+##  7 2103-08-14 16:30:00 2046-12-29 00:00:00 NA                 
+##  8 2103-08-14 16:30:00 2046-12-29 00:00:00 NA                 
+##  9 2124-05-15 11:50:00 2069-09-07 00:00:00 NA                 
+## 10 2124-05-15 11:50:00 2069-09-07 00:00:00 NA                 
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_tsicu %&gt;%
+  left_join(
+    select(tbl(con, &quot;admissions&quot;),
+           subject_id, hadm_id, admittime, dischtime, hospital_expire_flag
+    ), by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)
+  ) %&gt;%
+  filter(hospital_expire_flag == 0) %&gt;% # patients who did not die in hospital
+  select(-hospital_expire_flag) %&gt;%
+  left_join(
+    select(tbl(con, &quot;patients&quot;), subject_id, dob, dod),
+    by = &quot;subject_id&quot;
+  ) %&gt;%
+  print(width = Inf) -&gt; study_admissions_tsicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id drg_severity icd9_code principal_dx admittime          
+##         &lt;int&gt;   &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;dttm&gt;             
+##  1        671  126769            3 78060     FALSE        2195-12-31 04:44:00
+##  2        671  126769            3 78060     FALSE        2195-12-31 04:44:00
+##  3      11421  199366            3 78062     FALSE        2114-09-25 20:54:00
+##  4      11421  199366            3 78062     FALSE        2114-09-25 20:54:00
+##  5      30551  113392            1 78061     FALSE        2187-10-05 23:20:00
+##  6      30551  113392            1 78061     FALSE        2187-10-05 23:20:00
+##  7      43171  161695            3 78062     FALSE        2183-12-08 19:25:00
+##  8      43171  161695            3 78062     FALSE        2183-12-08 19:25:00
+##  9      59845  112573            1 78062     FALSE        2174-11-18 11:30:00
+## 10      59845  112573            1 78062     FALSE        2174-11-18 11:30:00
+##    dischtime           dob                 dod                
+##    &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
+##  1 2196-01-11 17:45:00 2148-03-27 00:00:00 NA                 
+##  2 2196-01-11 17:45:00 2148-03-27 00:00:00 NA                 
+##  3 2114-10-09 16:45:00 2062-10-17 00:00:00 2116-08-29 00:00:00
+##  4 2114-10-09 16:45:00 2062-10-17 00:00:00 2116-08-29 00:00:00
+##  5 2187-10-09 00:26:00 2120-03-30 00:00:00 NA                 
+##  6 2187-10-09 00:26:00 2120-03-30 00:00:00 NA                 
+##  7 2183-12-22 18:00:00 2105-04-14 00:00:00 NA                 
+##  8 2183-12-22 18:00:00 2105-04-14 00:00:00 NA                 
+##  9 2174-11-26 15:28:00 2113-11-21 00:00:00 NA                 
+## 10 2174-11-26 15:28:00 2113-11-21 00:00:00 NA                 
+## # … with more rows</code></pre>
+<p>To add <code>age</code> (at admission) variable into the table. <a href="https://mimic.physionet.org/mimictables/patients/">The documentation for the patients table</a> explains that patients of 90 years and older had their ages artificially inflated, so we remove these patients from the analysis.</p>
+<pre class="r"><code>study_admissions_ccu %&gt;%
+  mutate(tt_death = date_part(&quot;day&quot;, dod) - date_part(&quot;day&quot;, dischtime)) %&gt;%
+  mutate(mortality = tt_death &lt;= 30) %&gt;%
+  mutate(age = date_part(&quot;year&quot;, admittime) - date_part(&quot;year&quot;, dob)) %&gt;%
+  filter(age &lt; 90) %&gt;%
+  mutate(age = age - ifelse(
+    date_part(&quot;month&quot;, admittime) &lt; date_part(&quot;month&quot;, dob) |
+      (
+        date_part(&quot;month&quot;, admittime) == date_part(&quot;month&quot;, dob) &amp;
+          date_part(&quot;day&quot;, admittime) &lt; date_part(&quot;day&quot;, dob)
+      ),
+    1,
+    0
+  )) %&gt;%
+  select(-admittime, -dischtime, -dob, -dod, -tt_death) %&gt;%
+  select(subject_id, hadm_id, age, mortality, everything()) %&gt;%
+  print() -&gt; study_admissions_ccu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;       
+##  1       6891  145953    58 NA                   1 78060     TRUE        
+##  2       6891  145953    58 NA                   1 78060     TRUE        
+##  3      51557  168163    25 NA                   3 78060     FALSE       
+##  4      51557  168163    25 NA                   3 78060     FALSE       
+##  5      55106  186531    57 NA                   3 27731     FALSE       
+##  6      55106  186531    57 NA                   3 27731     FALSE       
+##  7      63866  108244    46 NA                   3 78060     FALSE       
+##  8      63866  108244    46 NA                   4 78060     FALSE       
+##  9      65309  178833    81 NA                   3 78060     FALSE       
+## 10      65309  178833    81 NA                   3 78060     FALSE       
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_csru %&gt;%
+  mutate(tt_death = date_part(&quot;day&quot;, dod) - date_part(&quot;day&quot;, dischtime)) %&gt;%
+  mutate(mortality = tt_death &lt;= 30) %&gt;%
+  mutate(age = date_part(&quot;year&quot;, admittime) - date_part(&quot;year&quot;, dob)) %&gt;%
+  filter(age &lt; 90) %&gt;%
+  mutate(age = age - ifelse(
+    date_part(&quot;month&quot;, admittime) &lt; date_part(&quot;month&quot;, dob) |
+      (
+        date_part(&quot;month&quot;, admittime) == date_part(&quot;month&quot;, dob) &amp;
+          date_part(&quot;day&quot;, admittime) &lt; date_part(&quot;day&quot;, dob)
+      ),
+    1,
+    0
+  )) %&gt;%
+  select(-admittime, -dischtime, -dob, -dod, -tt_death) %&gt;%
+  select(subject_id, hadm_id, age, mortality, everything()) %&gt;%
+  print() -&gt; study_admissions_csru</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;       
+##  1      42243  111059    64 NA                   2 78062     FALSE       
+##  2      42243  111059    64 NA                   2 78062     FALSE       
+##  3      42451  102698    47 NA                   2 78062     FALSE       
+##  4      42451  102698    47 NA                   2 78062     FALSE       
+##  5      44808  140128    45 NA                   2 78062     FALSE       
+##  6      44808  140128    45 NA                   2 78062     FALSE       
+##  7      46085  136655    65 NA                   2 78061     FALSE       
+##  8      46085  136655    65 NA                   2 78061     FALSE       
+##  9      46715  102616    44 NA                   1 78062     FALSE       
+## 10      46715  102616    44 NA                   1 78062     FALSE       
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_micu %&gt;%
+  mutate(tt_death = date_part(&quot;day&quot;, dod) - date_part(&quot;day&quot;, dischtime)) %&gt;%
+  mutate(mortality = tt_death &lt;= 30) %&gt;%
+  mutate(age = date_part(&quot;year&quot;, admittime) - date_part(&quot;year&quot;, dob)) %&gt;%
+  filter(age &lt; 90) %&gt;%
+  mutate(age = age - ifelse(
+    date_part(&quot;month&quot;, admittime) &lt; date_part(&quot;month&quot;, dob) |
+      (
+        date_part(&quot;month&quot;, admittime) == date_part(&quot;month&quot;, dob) &amp;
+          date_part(&quot;day&quot;, admittime) &lt; date_part(&quot;day&quot;, dob)
+      ),
+    1,
+    0
+  )) %&gt;%
+  select(-admittime, -dischtime, -dob, -dod, -tt_death) %&gt;%
+  select(subject_id, hadm_id, age, mortality, everything()) %&gt;%
+  print() -&gt; study_admissions_micu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;       
+##  1       6428  164632    24 NA                   3 78060     TRUE        
+##  2       6428  164632    24 NA                   3 78060     TRUE        
+##  3      11018  186291    66 TRUE                 3 78060     FALSE       
+##  4      11018  186291    66 TRUE                 3 78060     FALSE       
+##  5      28935  151031    44 NA                   2 78060     FALSE       
+##  6      28935  151031    44 NA                   2 78060     FALSE       
+##  7      31136  149711    66 TRUE                 3 78060     TRUE        
+##  8      31136  149711    66 TRUE                 3 78060     TRUE        
+##  9      32161  101665    39 NA                   2 78060     FALSE       
+## 10      32161  101665    39 NA                   2 78060     FALSE       
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_sicu %&gt;%
+  mutate(tt_death = date_part(&quot;day&quot;, dod) - date_part(&quot;day&quot;, dischtime)) %&gt;%
+  mutate(mortality = tt_death &lt;= 30) %&gt;%
+  mutate(age = date_part(&quot;year&quot;, admittime) - date_part(&quot;year&quot;, dob)) %&gt;%
+  filter(age &lt; 90) %&gt;%
+  mutate(age = age - ifelse(
+    date_part(&quot;month&quot;, admittime) &lt; date_part(&quot;month&quot;, dob) |
+      (
+        date_part(&quot;month&quot;, admittime) == date_part(&quot;month&quot;, dob) &amp;
+          date_part(&quot;day&quot;, admittime) &lt; date_part(&quot;day&quot;, dob)
+      ),
+    1,
+    0
+  )) %&gt;%
+  select(-admittime, -dischtime, -dob, -dod, -tt_death) %&gt;%
+  select(subject_id, hadm_id, age, mortality, everything()) %&gt;%
+  print() -&gt; study_admissions_sicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;       
+##  1      28423  119557    52 NA                   3 78060     TRUE        
+##  2      28423  119557    52 NA                   3 78060     TRUE        
+##  3      30011  183545    70 NA                   1 78062     FALSE       
+##  4      30011  183545    70 NA                   1 78062     FALSE       
+##  5      43770  193987    64 NA                   1 78062     FALSE       
+##  6      43770  193987    64 NA                   1 78062     FALSE       
+##  7      44449  133796    56 NA                   3 78060     FALSE       
+##  8      44449  133796    56 NA                   3 78060     FALSE       
+##  9      44715  132968    54 NA                   2 78060     FALSE       
+## 10      44715  132968    54 NA                   2 78060     FALSE       
+## # … with more rows</code></pre>
+<pre class="r"><code>study_admissions_tsicu %&gt;%
+  mutate(tt_death = date_part(&quot;day&quot;, dod) - date_part(&quot;day&quot;, dischtime)) %&gt;%
+  mutate(mortality = tt_death &lt;= 30) %&gt;%
+  mutate(age = date_part(&quot;year&quot;, admittime) - date_part(&quot;year&quot;, dob)) %&gt;%
+  filter(age &lt; 90) %&gt;%
+  mutate(age = age - ifelse(
+    date_part(&quot;month&quot;, admittime) &lt; date_part(&quot;month&quot;, dob) |
+      (
+        date_part(&quot;month&quot;, admittime) == date_part(&quot;month&quot;, dob) &amp;
+          date_part(&quot;day&quot;, admittime) &lt; date_part(&quot;day&quot;, dob)
+      ),
+    1,
+    0
+  )) %&gt;%
+  select(-admittime, -dischtime, -dob, -dod, -tt_death) %&gt;%
+  select(subject_id, hadm_id, age, mortality, everything()) %&gt;%
+  print() -&gt; study_admissions_tsicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;       
+##  1        671  126769    47 NA                   3 78060     FALSE       
+##  2        671  126769    47 NA                   3 78060     FALSE       
+##  3      11421  199366    51 TRUE                 3 78062     FALSE       
+##  4      11421  199366    51 TRUE                 3 78062     FALSE       
+##  5      30551  113392    67 NA                   1 78061     FALSE       
+##  6      30551  113392    67 NA                   1 78061     FALSE       
+##  7      43171  161695    78 NA                   3 78062     FALSE       
+##  8      43171  161695    78 NA                   3 78062     FALSE       
+##  9      59845  112573    60 NA                   1 78062     FALSE       
+## 10      59845  112573    60 NA                   1 78062     FALSE       
+## # … with more rows</code></pre>
+<p>Many mortality indicators are missing, due to neither the hospital database nor the social security database having a record of these patients’ deaths. It may be helpful to retain in the analytic table this information on whether deaths were recorded at all, e.g. for validation or sensitivity testing.</p>
+<p>Finally, let’s merge some demographic information (ethnicity, gender) into our study.</p>
+<pre class="r"><code>tbl(con, &quot;admissions&quot;) %&gt;%
+  select(subject_id, ethnicity) %&gt;%
+  distinct() %&gt;%
+  print() -&gt; study_subjects</code></pre>
+<pre><code>## # Source:   lazy query [?? x 2]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id ethnicity             
+##         &lt;int&gt; &lt;chr&gt;                 
+##  1       1421 BLACK/AFRICAN AMERICAN
+##  2      68255 ASIAN                 
+##  3       4901 WHITE                 
+##  4      81232 WHITE                 
+##  5      28292 WHITE                 
+##  6      21741 WHITE                 
+##  7      12175 BLACK/AFRICAN AMERICAN
+##  8        341 BLACK/AFRICAN AMERICAN
+##  9      48629 UNABLE TO OBTAIN      
+## 10      18688 HISPANIC OR LATINO    
+## # … with more rows</code></pre>
+<pre class="r"><code>tbl(con, &quot;patients&quot;) %&gt;%
+  select(subject_id, gender) %&gt;%
+  distinct() %&gt;%
+  full_join(study_subjects, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id gender ethnicity             
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                 
+##  1      26121 M      WHITE                 
+##  2       7489 F      WHITE                 
+##  3      81661 M      WHITE                 
+##  4      30273 F      WHITE                 
+##  5      55935 F      BLACK/AFRICAN AMERICAN
+##  6      63914 M      UNABLE TO OBTAIN      
+##  7      19393 M      WHITE                 
+##  8      15861 M      WHITE                 
+##  9      12289 F      WHITE                 
+## 10      31927 F      PORTUGUESE            
+## # … with more rows</code></pre>
+<pre class="r"><code>study_subjects %&gt;%
+  semi_join(study_admissions_ccu, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects_ccu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id gender ethnicity       
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;           
+##  1      77826 M      WHITE           
+##  2      89956 M      WHITE           
+##  3      65309 M      WHITE           
+##  4      87254 M      WHITE           
+##  5      55106 F      UNABLE TO OBTAIN
+##  6      66339 M      WHITE           
+##  7      51557 F      WHITE           
+##  8      63866 M      WHITE           
+##  9      84463 F      WHITE           
+## 10      97982 M      UNABLE TO OBTAIN
+## # … with more rows</code></pre>
+<pre class="r"><code>study_subjects %&gt;%
+  semi_join(study_admissions_csru, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects_csru</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id gender ethnicity       
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;           
+##  1      73990 M      UNABLE TO OBTAIN
+##  2      75155 M      WHITE           
+##  3      58834 F      WHITE           
+##  4      70871 M      WHITE           
+##  5      53244 M      ASIAN           
+##  6      49463 M      WHITE           
+##  7      71191 F      WHITE           
+##  8      52504 M      WHITE           
+##  9      92387 M      WHITE           
+## 10      58501 M      WHITE           
+## # … with more rows</code></pre>
+<pre class="r"><code>study_subjects %&gt;%
+  semi_join(study_admissions_micu, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects_micu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id gender ethnicity             
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                 
+##  1      58932 M      BLACK/AFRICAN AMERICAN
+##  2      97603 M      ASIAN - CHINESE       
+##  3      57669 F      HISPANIC OR LATINO    
+##  4      40004 M      WHITE                 
+##  5      60413 F      WHITE                 
+##  6      46480 F      BLACK/AFRICAN AMERICAN
+##  7      74910 M      ASIAN - ASIAN INDIAN  
+##  8      82562 F      WHITE                 
+##  9      89092 F      BLACK/AFRICAN AMERICAN
+## 10      90772 F      WHITE                 
+## # … with more rows</code></pre>
+<pre class="r"><code>study_subjects %&gt;%
+  semi_join(study_admissions_sicu, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects_sicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id gender ethnicity                  
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                      
+##  1      93560 F      WHITE                      
+##  2      63459 F      ASIAN - ASIAN INDIAN       
+##  3      52329 M      WHITE                      
+##  4      75638 F      WHITE                      
+##  5      43770 F      WHITE                      
+##  6      46959 M      UNKNOWN/NOT SPECIFIED      
+##  7      81342 F      BLACK/AFRICAN AMERICAN     
+##  8      58740 M      WHITE                      
+##  9      77537 M      WHITE                      
+## 10      82633 M      HISPANIC/LATINO - DOMINICAN
+## # … with more rows</code></pre>
+<pre class="r"><code>study_subjects %&gt;%
+  semi_join(study_admissions_tsicu, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects_tsicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id gender ethnicity
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;    
+##  1      81844 M      WHITE    
+##  2      43171 F      WHITE    
+##  3      76332 M      WHITE    
+##  4        671 M      WHITE    
+##  5      85131 M      WHITE    
+##  6      93588 M      WHITE    
+##  7      85712 M      WHITE    
+##  8      60245 F      WHITE    
+##  9      30551 M      WHITE    
+## 10      59845 F      WHITE    
+## # … with more rows</code></pre>
+<p>Let’s resolves ome diversity and inconsistency in the <code>ethnicity</code> field:</p>
+<pre class="r"><code>unknown_ethnicity &lt;- c(
+  &quot;OTHER&quot;,
+  &quot;UNABLE TO OBTAIN&quot;,
+  &quot;UNKNOWN/NOT SPECIFIED&quot;,
+  &quot;MULTI RACE ETHNICITY&quot;,
+  &quot;PATIENT DECLINED TO ANSWER&quot;,
+  &quot;UNKNOWN&quot;
+)
+
+study_subjects %&gt;%
+  collect() %&gt;%
+  mutate(ethnic_group = case_when(
+    str_detect(ethnicity, &quot;^ASIAN&quot;) ~ &quot;ASIAN&quot;,
+    str_detect(ethnicity, &quot;^BLACK&quot;) ~ &quot;BLACK&quot;,
+    str_detect(ethnicity, &quot;^HISPANIC&quot;) ~ &quot;HISPANIC&quot;,
+    str_detect(ethnicity, &quot;^WHITE&quot;) ~ &quot;WHITE&quot;,
+    ethnicity %in% unknown_ethnicity ~ NA_character_,
+    TRUE ~ NA_character_
+  )) %&gt;%
+  select(subject_id, gender, ethnic_group) %&gt;%
+  print() -&gt; study_subjects</code></pre>
+<pre><code>## # A tibble: 46,811 x 3
+##    subject_id gender ethnic_group
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;       
+##  1          2 M      ASIAN       
+##  2          3 M      WHITE       
+##  3          4 F      WHITE       
+##  4          5 M      ASIAN       
+##  5          6 F      WHITE       
+##  6          7 F      WHITE       
+##  7          8 M      WHITE       
+##  8          9 M      &lt;NA&gt;        
+##  9         10 F      BLACK       
+## 10         11 F      WHITE       
+## # … with 46,801 more rows</code></pre>
+<p>Some patients are coded as belonging to more than one ethnic group. To resolve these inconsistencies, we define a helper function to pick the modal value from a vector of values in R, which can be used by the <code>summarize()</code> function to choose one ethnic group for each patient.</p>
+<pre class="r"><code>most &lt;- function(x) {
+  if (all(is.na(x))) return(NA_character_)
+  y &lt;- table(x, useNA = &quot;no&quot;)
+  if (length(which(y == max(y))) &gt; 1) return(NA_character_)
+  return(names(y)[which.max(y)])
+}
+
+study_subjects %&gt;%
+  group_by(subject_id) %&gt;%
+  summarize(ethnic_group = most(ethnic_group)) %&gt;%
+  ungroup() %&gt;%
+  mutate(ethnic_group = ifelse(is.na(ethnic_group), &quot;UNKNOWN&quot;, ethnic_group)) %&gt;%
+  print() -&gt; subject_ethnic_groups</code></pre>
+<pre><code>## # A tibble: 46,520 x 2
+##    subject_id ethnic_group
+##         &lt;int&gt; &lt;chr&gt;       
+##  1          2 ASIAN       
+##  2          3 WHITE       
+##  3          4 WHITE       
+##  4          5 ASIAN       
+##  5          6 WHITE       
+##  6          7 WHITE       
+##  7          8 WHITE       
+##  8          9 UNKNOWN     
+##  9         10 BLACK       
+## 10         11 WHITE       
+## # … with 46,510 more rows</code></pre>
+<pre class="r"><code>study_subjects %&gt;%
+  select(subject_id, gender) %&gt;%
+  left_join(subject_ethnic_groups, by = &quot;subject_id&quot;) %&gt;%
+  print() -&gt; study_subjects</code></pre>
+<pre><code>## # A tibble: 46,811 x 3
+##    subject_id gender ethnic_group
+##         &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;       
+##  1          2 M      ASIAN       
+##  2          3 M      WHITE       
+##  3          4 F      WHITE       
+##  4          5 M      ASIAN       
+##  5          6 F      WHITE       
+##  6          7 F      WHITE       
+##  7          8 M      WHITE       
+##  8          9 M      UNKNOWN     
+##  9         10 F      BLACK       
+## 10         11 F      WHITE       
+## # … with 46,801 more rows</code></pre>
+<p>Now we add the demographic information <code>gender</code> and <code>ethnicity</code> into our tables:</p>
+<pre class="r"><code>study_admissions_ccu %&gt;%
+  left_join(study_subjects, by = &quot;subject_id&quot;, copy = TRUE) %&gt;%
+  print() -&gt; study_admissions_ccu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx gender
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;chr&gt; 
+##  1       6891  145953    58 NA                   1 78060     TRUE         F     
+##  2       6891  145953    58 NA                   1 78060     TRUE         F     
+##  3      51557  168163    25 NA                   3 78060     FALSE        F     
+##  4      51557  168163    25 NA                   3 78060     FALSE        F     
+##  5      55106  186531    57 NA                   3 27731     FALSE        F     
+##  6      55106  186531    57 NA                   3 27731     FALSE        F     
+##  7      63866  108244    46 NA                   3 78060     FALSE        M     
+##  8      63866  108244    46 NA                   4 78060     FALSE        M     
+##  9      65309  178833    81 NA                   3 78060     FALSE        M     
+## 10      65309  178833    81 NA                   3 78060     FALSE        M     
+## # … with more rows, and 1 more variable: ethnic_group &lt;chr&gt;</code></pre>
+<pre class="r"><code>study_admissions_csru %&gt;%
+  left_join(study_subjects, by = &quot;subject_id&quot;, copy = TRUE) %&gt;%
+  print() -&gt; study_admissions_csru</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx gender
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;chr&gt; 
+##  1      42243  111059    64 NA                   2 78062     FALSE        M     
+##  2      42243  111059    64 NA                   2 78062     FALSE        M     
+##  3      42451  102698    47 NA                   2 78062     FALSE        M     
+##  4      42451  102698    47 NA                   2 78062     FALSE        M     
+##  5      44808  140128    45 NA                   2 78062     FALSE        M     
+##  6      44808  140128    45 NA                   2 78062     FALSE        M     
+##  7      46085  136655    65 NA                   2 78061     FALSE        M     
+##  8      46085  136655    65 NA                   2 78061     FALSE        M     
+##  9      46715  102616    44 NA                   1 78062     FALSE        M     
+## 10      46715  102616    44 NA                   1 78062     FALSE        M     
+## # … with more rows, and 1 more variable: ethnic_group &lt;chr&gt;</code></pre>
+<pre class="r"><code>study_admissions_micu %&gt;%
+  left_join(study_subjects, by = &quot;subject_id&quot;, copy = TRUE) %&gt;%
+  print() -&gt; study_admissions_micu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx gender
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;chr&gt; 
+##  1       6428  164632    24 NA                   3 78060     TRUE         F     
+##  2       6428  164632    24 NA                   3 78060     TRUE         F     
+##  3      11018  186291    66 TRUE                 3 78060     FALSE        M     
+##  4      11018  186291    66 TRUE                 3 78060     FALSE        M     
+##  5      28935  151031    44 NA                   2 78060     FALSE        F     
+##  6      28935  151031    44 NA                   2 78060     FALSE        F     
+##  7      31136  149711    66 TRUE                 3 78060     TRUE         F     
+##  8      31136  149711    66 TRUE                 3 78060     TRUE         F     
+##  9      32161  101665    39 NA                   2 78060     FALSE        M     
+## 10      32161  101665    39 NA                   2 78060     FALSE        M     
+## # … with more rows, and 1 more variable: ethnic_group &lt;chr&gt;</code></pre>
+<pre class="r"><code>study_admissions_sicu %&gt;%
+  left_join(study_subjects, by = &quot;subject_id&quot;, copy = TRUE) %&gt;%
+  print() -&gt; study_admissions_sicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx gender
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;chr&gt; 
+##  1      28423  119557    52 NA                   3 78060     TRUE         M     
+##  2      28423  119557    52 NA                   3 78060     TRUE         M     
+##  3      30011  183545    70 NA                   1 78062     FALSE        F     
+##  4      30011  183545    70 NA                   1 78062     FALSE        F     
+##  5      43770  193987    64 NA                   1 78062     FALSE        F     
+##  6      43770  193987    64 NA                   1 78062     FALSE        F     
+##  7      44449  133796    56 NA                   3 78060     FALSE        F     
+##  8      44449  133796    56 NA                   3 78060     FALSE        F     
+##  9      44715  132968    54 NA                   2 78060     FALSE        M     
+## 10      44715  132968    54 NA                   2 78060     FALSE        M     
+## # … with more rows, and 1 more variable: ethnic_group &lt;chr&gt;</code></pre>
+<pre class="r"><code>study_admissions_tsicu %&gt;%
+  left_join(study_subjects, by = &quot;subject_id&quot;, copy = TRUE) %&gt;%
+  print() -&gt; study_admissions_tsicu</code></pre>
+<pre><code>## # Source:   lazy query [?? x 9]
+## # Database: postgres 11.0.7 [postgres@/var/run/postgresql:5432/mimic]
+##    subject_id hadm_id   age mortality drg_severity icd9_code principal_dx gender
+##         &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;lgl&gt;        &lt;chr&gt; 
+##  1        671  126769    47 NA                   3 78060     FALSE        M     
+##  2        671  126769    47 NA                   3 78060     FALSE        M     
+##  3      11421  199366    51 TRUE                 3 78062     FALSE        M     
+##  4      11421  199366    51 TRUE                 3 78062     FALSE        M     
+##  5      30551  113392    67 NA                   1 78061     FALSE        M     
+##  6      30551  113392    67 NA                   1 78061     FALSE        M     
+##  7      43171  161695    78 NA                   3 78062     FALSE        F     
+##  8      43171  161695    78 NA                   3 78062     FALSE        F     
+##  9      59845  112573    60 NA                   1 78062     FALSE        F     
+## 10      59845  112573    60 NA                   1 78062     FALSE        F     
+## # … with more rows, and 1 more variable: ethnic_group &lt;chr&gt;</code></pre>
 </div>
 <div id="data-visualization" class="section level1">
 <h1>Data Visualization</h1>
