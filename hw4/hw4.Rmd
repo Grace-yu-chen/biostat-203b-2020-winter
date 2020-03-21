@@ -1,5 +1,5 @@
 ---
-title: "30-Day Mortality Rate of Myocardia Infarction Patients Admitted to All Seven Care Units"
+title: "30-Day Mortality Condition of Myocardia Infarction Patients Admitted to All Seven Care Units"
 author: Yu Chen 305266880
 output:
   # ioslides_presentation: default
@@ -203,7 +203,7 @@ study_admissions_tsicu <- tbl(con, "drgcodes") %>%
 
 ```
 
-Pull the admission time `admittime`, discharge time `dischtime`, date of birth `dob`, and date of death `dod`. We are interested in the  mortaility rate 30 days after discharge. So we only keep patients who didn't die in hospital.
+Pull the admission time `admittime`, discharge time `dischtime`, date of birth `dob`, and date of death `dod`. We are interested in the mortaility rate 30 days after discharge. So we only keep patients who didn't die in hospital.
 ```{r}
 study_admissions_ccu %>%
   left_join(
@@ -455,12 +455,86 @@ study_admissions_tsicu %>%
   print() -> study_admissions_tsicu
 ```
 
-Close the connection:
+I load the entire tables into the memory we may use:
 ```{r}
-dbDisconnect(con)
+ccu <- collect(study_admissions_ccu)
+csru <- collect(study_admissions_csru)
+micu <- collect(study_admissions_micu)
+sicu <- collect(study_admissions_sicu)
+tsicu <- collect(study_admissions_tsicu)
 ```
+
 # Data Visualization
 
+
+
 # Analytics
+
+In this part, we calculate the death rate in all unit cares to see the difference.
+```{r}
+tbl <- as_tibble(data.frame(care_unit = c("ccu", "csru", "micu", "sicu", "tsicu"))) %>%
+  mutate(deathrate = c(sum(!is.na(ccu$mortality))/nrow(ccu), sum(!is.na(csru$mortality))/nrow(csru), sum(!is.na(micu$mortality))/nrow(micu), sum(!is.na(sicu$mortality))/nrow(sicu), sum(!is.na(tsicu$mortality))/nrow(tsicu))) %>%
+  print()
+```
+
+We can see the highest death rate happens in SICU, so we analyze the detailed information of patients transfer to SICU in the following parts.
+
+- Age
+```{r}
+sicu %>%
+  ggplot(aes(x = age)) +
+  geom_freqpoly(bins = 20) +
+  labs(x = "Age")
+```
+
+As shown in the figure above, the majority of myocardia infarction patients admitted to SICU are between 60 to 80 years old, which makes sence because elderly people may have higher risk in getting heart attack.
+
+Then we consider people who died within 30 days after discharge.
+```{r}
+sicu %>%
+  filter(mortality == TRUE) %>%
+  ggplot(aes(x = age)) +
+  geom_freqpoly(bins = 20) +
+  labs(x = "Age")
+```
+
+A better picture is shown below.
+```{r}
+sicu %>%
+  filter(mortality == TRUE) %>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = factor(1), y = age)) +
+  labs(x = "", y = "Age") + 
+  scale_y_log10()
+```
+
+It's clearly that the majority of myocardia infarction patients admitted to SICU and died within 30 days is about 72 years old.
+
+- Severity
+
+In this section, we want to discuss the severity of passed patients’ ailments when they leave the hospital.
+```{r}
+sicu %>%
+  filter(mortality == TRUE) %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = drg_severity)) +
+  labs(x = "Severity")
+```
+
+We can see that most of the passed patients leave the hospital when their diagnosis are not very severe and less than a quarter of the patients are highly severe.
+
+- Gender
+
+```{r}
+sicu %>%
+  filter(mortality == TRUE) %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = gender)) +
+  labs(x = "Gender")
+```
+
+In this case, we know that more male patients passed within 30 days, it's because the number of males patients is larger than that of female patients in the first place.
+
+-E
 
 # Conclusions
