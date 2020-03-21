@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
+
+
 # Data Preparation
 
 Load database libraries and the tidyverse frontend:
@@ -94,7 +96,7 @@ tbl(con, "transfers") %>%
   print() -> tsicu_admissions
 ```
 
-Now we want to restrict to Myocardia Infarction Patients patients. To find all possible ICD-9 codes related to heart attack, we search for string `myocardial infarction` in the `long_title` of table `d_icd_diagnoses`:
+Now we want to restrict to Myocardia Infarction Patients. To find all possible ICD-9 codes related to heart attack, we search for string `myocardial infarction` in the `long_title` of table `d_icd_diagnoses`:
 ```{r}
 mi_codes <- tbl(con, "d_icd_diagnoses") %>%
   filter(str_detect(tolower(long_title), "myocardial infarction")) 
@@ -466,7 +468,82 @@ tsicu <- collect(study_admissions_tsicu)
 
 # Data Visualization
 
+```{r plot}
+library(shape)
+library(diagram)
 
+# set margins and multiplot
+par(mfrow = c(1, 1))
+par(mar = c(5, 4, 4, 2))
+
+# initialise a plot device
+openplotmat()
+
+# position of boxes
+# 1st column indicates x axis position between 0 and 1
+# 2nd column indicates y axis position between 0 and 1
+# automatically assigns vertical position
+num_of_boxes <- 15
+auto_coords = coordinates(num_of_boxes)
+#vert_pos = rev(auto_coords[,15])
+box_pos <- matrix(nrow = num_of_boxes, ncol = 2, data = 0)
+box_pos[1,] = c(0.20, 0.1) # 1st box
+box_pos[2,] = c(0.20, 0.2) # 2nd box
+box_pos[3,] = c(0.20, 0.3) # 3rd box
+box_pos[4,] = c(0.90, 0.4) # etc...
+box_pos[5,] = c(0.90, 0.5)
+box_pos[6,] = c(0.90, 0.6)
+box_pos[7,] = c(0.90, 0.7)
+box_pos[8,] = c(0.90, 0.8)
+box_pos[9,] = c(0.20, 0.9)
+box_pos[10,] = c(0.20, 1)
+box_pos[11,] = c(0.90, 1.1)
+box_pos[12,] = c(0.90, 1.2)
+box_pos[13,] = c(0.90, 1.3)
+box_pos[14,] = c(0.90, 1.4)
+
+# content of boxes
+box_content <- matrix(nrow = num_of_boxes, ncol = 1, data = 0)
+box_content[1] = "Patients admitted to all care units/n CCU,CSRU,MICU,NICU,NWARD,SICU and TSICU" # 1st box
+box_content[2] = "Patients diagnosed with Myocardia Infarction" # 2nd box
+box_content[3] = "Indicating the MI is the principal diagonosis or not" # 3rd box
+box_content[4] = "Add the severity of patients’ ailments" # etc...
+box_content[5] = "Keep information of patients who didn't die in hospital"
+box_content[6] = "Add age, exclude patients over 90 years old"
+box_content[7] = "Add Ethnicity and Gender"
+box_content[8] = "Calculate death rate and population"
+box_content[9] = "Detailed analysis of patients admitted to CCU and SICU"
+box_content[10] = "Age"
+box_content[11] = "Severty"
+box_content[12] = "Gender"
+box_content[13] = "Ethnicity"
+box_content[14] = "Conclusion"
+
+# adjust the size of boxes to fit content
+box_x <- c(0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25)
+box_y <- c(0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07)
+
+# Draw the arrows
+straightarrow(from = box_pos[1,], to = box_pos[2,], lwd = 1)
+straightarrow(from = c(box_pos[2,1],box_pos[3,2]), to = box_pos[3,], lwd = 1) 
+straightarrow(from = c(box_pos[2,1],box_pos[4,2]), to = box_pos[4,], lwd = 1)  
+straightarrow(from = c(box_pos[2,1],box_pos[5,2]), to = box_pos[5,], lwd = 1) 
+straightarrow(from = c(box_pos[2,1],box_pos[6,2]), to = box_pos[6,], lwd = 1)
+straightarrow(from = c(box_pos[2,1],box_pos[7,2]), to = box_pos[7,], lwd = 1)
+straightarrow(from = box_pos[2,], to = box_pos[8,], lwd = 1)
+straightarrow(from = box_pos[8,], to = box_pos[9,], lwd = 1)
+straightarrow(from = c(box_pos[9,1],box_pos[10,2]), to = box_pos[10,], lwd = 1)
+straightarrow(from = c(box_pos[9,1],box_pos[11,2]), to = box_pos[11,], lwd = 1)
+straightarrow(from = c(box_pos[9,1],box_pos[12,2]), to = box_pos[12,], lwd = 1)
+straightarrow(from = c(box_pos[9,1],box_pos[13,2]), to = box_pos[13,], lwd = 1)
+straightarrow(from = box_pos[9,], to = box_pos[14,], lwd = 1)
+# Draw the boxes
+for (i in 1:num_of_boxes) {
+  textrect(mid = box_pos[i,], radx = box_x[i], rady = box_y[i], 
+           lab = box_content[i], 
+           shadow.col = "grey")
+  }
+```
 
 # Analytics
 
@@ -474,17 +551,90 @@ In this part, we calculate the death rate in all unit cares to see the differenc
 ```{r}
 tbl <- as_tibble(data.frame(care_unit = c("ccu", "csru", "micu", "sicu", "tsicu"))) %>%
   mutate(deathrate = c(sum(!is.na(ccu$mortality))/nrow(ccu), sum(!is.na(csru$mortality))/nrow(csru), sum(!is.na(micu$mortality))/nrow(micu), sum(!is.na(sicu$mortality))/nrow(sicu), sum(!is.na(tsicu$mortality))/nrow(tsicu))) %>%
+  mutate(population = c(nrow(ccu), nrow(csru), nrow(micu), nrow(sicu), nrow(tsicu))) %>%
   print()
 ```
 
-We can see the highest death rate happens in SICU, so we analyze the detailed information of patients transfer to SICU in the following parts.
+We can see the highest death rate happens in SICU, and highest number of patients were admitted to CCU, so we analyze the detailed information of passed patients transfered to SICU and CCU in the following parts.
+
+## CCU
+
+- Age
+```{r}
+ccu %>%
+  ggplot(aes(x = age)) +
+  geom_freqpoly(bins = 20) +
+  labs(x = "Age (CCU)")
+```
+
+As shown in the figure above, the majority of myocardia infarction patients admitted to SICU are between 55 to 70 years old, which makes sence because elderly people may have higher risk in getting heart attack.
+
+Then we consider people who died within 30 days after discharge.
+```{r}
+ccu %>%
+  filter(mortality == TRUE) %>%
+  ggplot(aes(x = age)) +
+  geom_freqpoly(bins = 20) +
+  labs(x = "Age (CCU)")
+```
+
+A better picture is shown below.
+```{r}
+ccu %>%
+  filter(mortality == TRUE) %>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = factor(1), y = age)) +
+  labs(x = "", y = "Age") + 
+  scale_y_log10()
+```
+
+It's clearly that the majority of myocardia infarction patients admitted to SICU and died within 30 days is about 72 years old.
+
+- Severity
+
+In this section, we want to discuss the severity of passed patients’ ailments when they leave the hospital.
+```{r}
+ccu %>%
+  filter(mortality == TRUE) %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = drg_severity)) +
+  labs(x = "Severity")
+```
+
+We can see that most of the passed patients leave the hospital when their diagnosis are not very severe and less than half of the patients are highly severe.
+
+- Gender
+
+```{r}
+ccu %>%
+  filter(mortality == TRUE) %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = gender)) +
+  labs(x = "Gender")
+```
+
+In this case, we know that more male patients passed within 30 days, it's because the number of males patients is larger than that of female patients in the first place.
+
+-Ethnicity
+```{r}
+ccu %>%
+  filter(mortality == TRUE) %>%
+  filter(ethnic_group != "UNKNOWN") %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = ethnic_group)) +
+  labs(x = "Ethnicity")
+```
+
+Ignoring the unknown ethnicity, we can see that the majority of passed patients are white, only a few patients are Asian or Hispanic.
+
+## SICU
 
 - Age
 ```{r}
 sicu %>%
   ggplot(aes(x = age)) +
   geom_freqpoly(bins = 20) +
-  labs(x = "Age")
+  labs(x = "Age (SICU)")
 ```
 
 As shown in the figure above, the majority of myocardia infarction patients admitted to SICU are between 60 to 80 years old, which makes sence because elderly people may have higher risk in getting heart attack.
@@ -535,6 +685,16 @@ sicu %>%
 
 In this case, we know that more male patients passed within 30 days, it's because the number of males patients is larger than that of female patients in the first place.
 
--E
+-Ethnicity
+```{r}
+sicu %>%
+  filter(mortality == TRUE) %>%
+  filter(ethnic_group != "UNKNOWN") %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = ethnic_group)) +
+  labs(x = "Ethnicity")
+```
+
+Ignoring the unknown ethnicity, we can see that the majority of passed patients are white.
 
 # Conclusions
