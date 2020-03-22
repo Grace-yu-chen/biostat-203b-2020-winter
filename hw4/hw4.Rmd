@@ -523,8 +523,6 @@ for (i in 1:num_of_boxes) {
   }
 ```
 
-# Analytics
-
 In this part, we calculate the death rate in all unit cares to see the difference.
 ```{r}
 tbl <- as_tibble(data.frame(care_unit = c("ccu", "csru", "micu", "sicu", "tsicu"))) %>%
@@ -676,6 +674,59 @@ sicu %>%
 
 Ignoring the unknown ethnicity, we can see that the majority of passed patients are white.
 
+# Analytics
+
+```{r}
+library(keras)
+```
+
+Define a **sequential model** (a linear stack of layers) with 2 fully-connected hidden layers (256 and 128 neurons):
+```{r}
+model <- keras_model_sequential() 
+model %>% 
+  layer_dense(units = 50, activation = 'relu', input_shape = c(5)) %>% 
+  layer_dropout(rate = 0.4) %>% 
+  layer_dense(units = 25, activation = 'relu') %>%
+  layer_dropout(rate = 0.3) %>%
+  layer_dense(units = 5, activation = 'softmax')
+summary(model)
+```
+
+Compile the model with appropriate loss function, optimizer, and metrics:
+```{r}
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+```
+
+### Training and validation
+
+```{r}
+system.time({
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = 30, batch_size = 128, 
+  validation_split = 0.2
+)
+})
+plot(history)
+```
+
+### Testing
+
+Evaluate model performance on the test data:
+```{r}
+model %>% evaluate(x_test, y_test)
+```
+Generate predictions on new data:
+```{r}
+model %>% predict_classes(x_test) %>% head()
+```
+
 # Conclusions
 
 With the analysis above, we learn that CCU has the largest population of myocardia infarction patients (1675) and 429 of them passed within 30 days after discharge, where the deathrate is 25.61%. The highest deathrate presents itself in case of SICU, i.e., 46.08%. CSRU, MICU, and TSICU have deathrate of 17.16%, 41.13% and 27.45% respectively, while there is no data of  myocardia infarction patients admitted to NICU and NWARD. In this assignment, I detailedly analyse the data of CCU and SICU. I find that most of passed patients are about 72 years old. And male patients are more than female patients, but it may because the initial male patients are more than female patients. Also, I find that most of the passed patients are slightly severe when they leave the hospital, which should draw family members' attention to care of patients after discharge. In the data we study, the marjority of patients are white, which may because the data are collected mainly in white community.
+
+close connection
