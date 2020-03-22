@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-
+This report analyzes the electronic health record (EHR) data MIMIC-III. By working with PostgreSQL database, data visualization, and commonly used analytical methods such as logistic regression and neural network, I try to analyze 30-day mortality condition of myocardia infarction patients admitted to all seven care units. It shows a better picture of hospital conditions and can have a positive impact on decision making.
 
 # Data Preparation
 
@@ -474,7 +474,7 @@ library(diagram)
 
 # set margins and multiplot
 par(mfrow = c(1, 1))
-par(mar = c(5, 4, 4, 2))
+par(mar = c(0, 0, 0, 0))
 
 # initialise a plot device
 openplotmat()
@@ -483,60 +483,38 @@ openplotmat()
 # 1st column indicates x axis position between 0 and 1
 # 2nd column indicates y axis position between 0 and 1
 # automatically assigns vertical position
-num_of_boxes <- 15
+num_of_boxes <- 6
 auto_coords = coordinates(num_of_boxes)
-#vert_pos = rev(auto_coords[,15])
+vert_pos = rev(auto_coords[,1])
 box_pos <- matrix(nrow = num_of_boxes, ncol = 2, data = 0)
-box_pos[1,] = c(0.20, 0.1) # 1st box
-box_pos[2,] = c(0.20, 0.2) # 2nd box
-box_pos[3,] = c(0.20, 0.3) # 3rd box
-box_pos[4,] = c(0.90, 0.4) # etc...
-box_pos[5,] = c(0.90, 0.5)
-box_pos[6,] = c(0.90, 0.6)
-box_pos[7,] = c(0.90, 0.7)
-box_pos[8,] = c(0.90, 0.8)
-box_pos[9,] = c(0.20, 0.9)
-box_pos[10,] = c(0.20, 1)
-box_pos[11,] = c(0.90, 1.1)
-box_pos[12,] = c(0.90, 1.2)
-box_pos[13,] = c(0.90, 1.3)
-box_pos[14,] = c(0.90, 1.4)
+box_pos[1,] = c(0.30, vert_pos[1]) # 1st box
+box_pos[2,] = c(0.30, vert_pos[2]) # 2nd box
+box_pos[3,] = c(0.70, vert_pos[3]) # 3rd box
+box_pos[4,] = c(0.30, vert_pos[4]) # etc...
+box_pos[5,] = c(0.30, vert_pos[5])
+box_pos[6,] = c(0.30, vert_pos[6])
 
 # content of boxes
 box_content <- matrix(nrow = num_of_boxes, ncol = 1, data = 0)
-box_content[1] = "Patients admitted to all care units/n CCU,CSRU,MICU,NICU,NWARD,SICU and TSICU" # 1st box
+box_content[1] = "Patients admitted to all care units" # 1st box
 box_content[2] = "Patients diagnosed with Myocardia Infarction" # 2nd box
-box_content[3] = "Indicating the MI is the principal diagonosis or not" # 3rd box
-box_content[4] = "Add the severity of patients’ ailments" # etc...
-box_content[5] = "Keep information of patients who didn't die in hospital"
-box_content[6] = "Add age, exclude patients over 90 years old"
-box_content[7] = "Add Ethnicity and Gender"
-box_content[8] = "Calculate death rate and population"
-box_content[9] = "Detailed analysis of patients admitted to CCU and SICU"
-box_content[10] = "Age"
-box_content[11] = "Severty"
-box_content[12] = "Gender"
-box_content[13] = "Ethnicity"
-box_content[14] = "Conclusion"
+box_content[3] = "Add round inf about patients" # 3rd box
+box_content[4] = "Calculate death rate and population" # etc...
+box_content[5] = "Detailed analysis of patients admitted to CCU and SICU"
+box_content[6] = "Add age, severity, gender and ethnicity"
+
 
 # adjust the size of boxes to fit content
-box_x <- c(0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25)
-box_y <- c(0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07)
+box_x <- c(0.25, 0.25, 0.25, 0.25, 0.30, 0.25, 0.25)
+box_y <- c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
 
 # Draw the arrows
-straightarrow(from = box_pos[1,], to = box_pos[2,], lwd = 1)
-straightarrow(from = c(box_pos[2,1],box_pos[3,2]), to = box_pos[3,], lwd = 1) 
-straightarrow(from = c(box_pos[2,1],box_pos[4,2]), to = box_pos[4,], lwd = 1)  
-straightarrow(from = c(box_pos[2,1],box_pos[5,2]), to = box_pos[5,], lwd = 1) 
-straightarrow(from = c(box_pos[2,1],box_pos[6,2]), to = box_pos[6,], lwd = 1)
-straightarrow(from = c(box_pos[2,1],box_pos[7,2]), to = box_pos[7,], lwd = 1)
-straightarrow(from = box_pos[2,], to = box_pos[8,], lwd = 1)
-straightarrow(from = box_pos[8,], to = box_pos[9,], lwd = 1)
-straightarrow(from = c(box_pos[9,1],box_pos[10,2]), to = box_pos[10,], lwd = 1)
-straightarrow(from = c(box_pos[9,1],box_pos[11,2]), to = box_pos[11,], lwd = 1)
-straightarrow(from = c(box_pos[9,1],box_pos[12,2]), to = box_pos[12,], lwd = 1)
-straightarrow(from = c(box_pos[9,1],box_pos[13,2]), to = box_pos[13,], lwd = 1)
-straightarrow(from = box_pos[9,], to = box_pos[14,], lwd = 1)
+straightarrow(from = box_pos[1,], to = box_pos[2,], lwd = 1)  
+straightarrow(from = c(box_pos[2,1],box_pos[3,2]), to = box_pos[3,], lwd = 1)  
+straightarrow(from = box_pos[2,], to = box_pos[4,], lwd = 1)  
+straightarrow(from = box_pos[4,], to = box_pos[5,], lwd = 1)  
+straightarrow(from = box_pos[5,], to = box_pos[6,], lwd = 1) 
+
 # Draw the boxes
 for (i in 1:num_of_boxes) {
   textrect(mid = box_pos[i,], radx = box_x[i], rady = box_y[i], 
@@ -552,6 +530,7 @@ In this part, we calculate the death rate in all unit cares to see the differenc
 tbl <- as_tibble(data.frame(care_unit = c("ccu", "csru", "micu", "sicu", "tsicu"))) %>%
   mutate(deathrate = c(sum(!is.na(ccu$mortality))/nrow(ccu), sum(!is.na(csru$mortality))/nrow(csru), sum(!is.na(micu$mortality))/nrow(micu), sum(!is.na(sicu$mortality))/nrow(sicu), sum(!is.na(tsicu$mortality))/nrow(tsicu))) %>%
   mutate(population = c(nrow(ccu), nrow(csru), nrow(micu), nrow(sicu), nrow(tsicu))) %>%
+  mutate(number_of_death = c(sum(!is.na(ccu$mortality)), sum(!is.na(csru$mortality)), sum(!is.na(micu$mortality)), sum(!is.na(sicu$mortality)), sum(!is.na(tsicu$mortality)))) %>%
   print()
 ```
 
@@ -698,3 +677,5 @@ sicu %>%
 Ignoring the unknown ethnicity, we can see that the majority of passed patients are white.
 
 # Conclusions
+
+With the analysis above, we learn that CCU has the largest population of myocardia infarction patients (1675) and 429 of them passed within 30 days after discharge, where the deathrate is 25.61%. The highest deathrate presents itself in case of SICU, i.e., 46.08%. CSRU, MICU, and TSICU have deathrate of 17.16%, 41.13% and 27.45% respectively, while there is no data of  myocardia infarction patients admitted to NICU and NWARD. In this assignment, I detailedly analyse the data of CCU and SICU. I find that most of passed patients are about 72 years old. And male patients are more than female patients, but it may because the initial male patients are more than female patients. Also, I find that most of the passed patients are slightly severe when they leave the hospital, which should draw family members' attention to care of patients after discharge. In the data we study, the marjority of patients are white, which may because the data are collected mainly in white community.
