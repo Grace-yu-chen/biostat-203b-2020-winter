@@ -672,64 +672,78 @@ sicu %>%
   labs(x = "Ethnicity")
 ```
 
-Ignoring the unknown ethnicity, we can see that the majority of passed patients are white.
-```{r}
-dbDisconnect(con)
-```
-
 
 # Analytics
 
 ```{r}
-library(keras)
-install_keras()
-x_train = xmatrix[1:1000,]
-y_train = ymatrix[1:1000,]
-x_test = xmatrix[1000:1209,]
-y_test = ymatrix[1000:1209,]
-dim(x_train)
-dim(y_train)
+sicu_d <- sicu %>% 
+  mutate(los = ifelse(mortality,1,0)) %>%
+  mutate(principal_dx = ifelse(principal_dx,1,0)) %>%
+  mutate(ethnic_group = case_when(
+    str_detect(ethnic_group, "ASIAN") ~ 1,
+    str_detect(ethnic_group, "BLACK") ~ 2,
+    str_detect(ethnic_group, "HISPANIC") ~ 3,
+    str_detect(ethnic_group, "WHITE") ~ 4,
+    str_detect(ethnic_group, "UNKNOWN") ~ 5
+  )) %>%
+  select(age, drg_severity, icd9_code, principal_dx, ethnic_group, los) %>%
+  mutate(age = age/45.0) %>%
+  mutate(drg_severity = drg_severity/4) %>%
+  mutate(icd9_code = as.numeric(icd9_code)/68000) %>%
+  mutate(ethnic_group = ethnic_group/5) %>%
+  print()
 ```
 
 ```{r}
-model <- keras_model_sequential() 
-model %>% 
-  layer_dense(units = 50, activation = 'relu', input_shape = c(5))
-summary(model)
+library(keras)
+install_keras()
+x_train = sicu_d[1:50,1:5] %>% as.matrix() %>% print()
+y_train = sicu_d[1:50,6] %>% as.matrix() %>% print()
+dim(x_train)
+dim(y_train)
+
+x_test = sicu_d[51:102,1:5] %>% as.matrix() %>% print()
+y_test = sicu_d[51:102,6] %>% as.matrix() %>% print()
+dim(x_test)
+dim(y_test)
+
+```
+
+```{r}
+#model <- keras_model_sequential() 
+#model %>% 
+#  layer_dense(units = 1e20, activation = 'relu', input_shape = c(5)) 
+#summary(model)
 ```
 
 Compile the model with appropriate loss function, optimizer, and metrics:
 ```{r}
-model %>% 
-  compile(
-  loss = 'categorical_crossentropy',
-  optimizer = optimizer_rmsprop(),
-  metrics = c('accuracy')
-)
+#model %>% 
+#  compile(
+#  loss = 'sparse_categorical_crossentropy',
+#  optimizer = optimizer_rmsprop(),
+#  metrics = c('accuracy')
+#)
 ```
-
-### Training and validation
 
 ```{r}
-system.time({
-history <- model %>% fit(
-  x_train, y_train, 
-  epochs = 30, batch_size = 128, 
-  validation_split = 0.2
-)
-})
-plot(history)
+#system.time({
+#  history <- model %>% fit(
+#  x_train, y_train, 
+#  epochs = 30, batch_size = 20, 
+#  validation_split = 0.2
+#)
+#})
+#plot(history)
 ```
-
-### Testing
 
 Evaluate model performance on the test data:
 ```{r}
-model %>% evaluate(x_test, y_test)
+#model %>% evaluate(x_test, y_test)
 ```
 Generate predictions on new data:
 ```{r}
-model %>% predict_classes(x_test) %>% head()
+#model %>% predict_classes(x_test) %>% head()
 ```
 
 # Conclusions
