@@ -683,10 +683,10 @@ dbDisconnect(con)
 ```{r}
 library(keras)
 install_keras()
-x_train = x_matrix[1:1000,]
-y_train = y_matrix[1:1000,]
-x_test = x_matrix[1000:1209,]
-y_test = y_matrix[1000:1209,]
+x_train = xmatrix[1:1000,]
+y_train = ymatrix[1:1000,]
+x_test = xmatrix[1000:1209,]
+y_test = ymatrix[1000:1209,]
 dim(x_train)
 dim(y_train)
 ```
